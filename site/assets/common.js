@@ -1,5 +1,5 @@
 // Shared behaviour for every page: theme, copy buttons, command palette, reveal.
-const CLI = "npx eduorchestrate";
+const CLI = "npx kordexa";
 
 const root = document.documentElement;
 const themeButton = document.querySelector("[data-theme-toggle]");

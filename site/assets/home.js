@@ -2,8 +2,8 @@
 import { copyText } from "./common.js";
 import { MAX_DAYS, MIN_DAYS, buildPlan, cronFromTime, shellQuote, weeklyLoadHours } from "./planner.js";
 
-const CLI = "npx eduorchestrate";
-const CONFIG_FILE = "eduorchestrate.config.json";
+const CLI = "npx kordexa";
+const CONFIG_FILE = "kordexa.config.json";
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = (selector, scope = document) => scope.querySelector(selector);
 const $$ = (selector, scope = document) => [...scope.querySelectorAll(selector)];
@@ -138,7 +138,7 @@ function buildOutputs(values) {
 
   const config = {
     version: 1,
-    command: "/eduorchestrate",
+    command: "/kordexa",
     dataDir: "data",
     learner: {
       name: values.name,
@@ -166,7 +166,7 @@ function buildOutputs(values) {
 
   const cron = cronFromTime(values.dailyEmailTime, values.timezone);
   const workflow = [
-    "# .github/workflows/eduorchestrate-daily.yml",
+    "# .github/workflows/kordexa-daily.yml",
     "on:",
     "  schedule:",
     `    # GitHub Actions cron is UTC. Generated from ${values.dailyEmailTime} ${values.timezone}.`,

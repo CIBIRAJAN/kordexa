@@ -57,24 +57,23 @@
         <h1>Kordexa docs</h1>
         <p class="lede">Kordexa turns a target job role into a daily learning loop inside the AI coding agent you already use. Each day is one topic, one build artifact and one review.</p>
         <ul class="tags"><li>MIT</li><li>Node 18+</li><li>0 runtime dependencies</li><li>7 agent targets</li></ul>
-        <aside class="callout"><strong>About the command name.</strong> Kordexa builds on EduOrchestrate. Until a <code>kordexa</code> package is published, install and run it with <code>npx eduorchestrate</code>, as shown throughout these docs.</aside>
       </section>
 
       <section id="quickstart">
         <h2>Quickstart</h2>
         <p>Run the guided setup from a terminal in your project:</p>
-        <div class="code-block"><button type="button" data-copy="npx eduorchestrate">Copy</button><pre><code>npx eduorchestrate</code></pre></div>
+        <div class="code-block"><button type="button" data-copy="npx kordexa">Copy</button><pre><code>npx kordexa</code></pre></div>
         <p>For a scripted setup, pass your answers as flags. The <a href="/#configure">plan configurator</a> can write this command for you.</p>
-        <div class="code-block"><button type="button" data-copy='npx eduorchestrate --yes --name "Ada" --email "ada@example.com" --role "Agentic AI and LLM Engineer" --skill "evaluation" --days 45'>Copy</button><pre><code>npx eduorchestrate --yes --name "Ada" --email "ada@example.com" \
+        <div class="code-block"><button type="button" data-copy='npx kordexa --yes --name "Ada" --email "ada@example.com" --role "Agentic AI and LLM Engineer" --skill "evaluation" --days 45'>Copy</button><pre><code>npx kordexa --yes --name "Ada" --email "ada@example.com" \
   --role "Agentic AI and LLM Engineer" --skill "evaluation" --days 45</code></pre></div>
         <p>Then preview your first daily email. A dry run never sends anything.</p>
-        <div class="code-block"><button type="button" data-copy="npx eduorchestrate send-today --dry-run">Copy</button><pre><code>npx eduorchestrate send-today --dry-run</code></pre></div>
+        <div class="code-block"><button type="button" data-copy="npx kordexa send-today --dry-run">Copy</button><pre><code>npx kordexa send-today --dry-run</code></pre></div>
         <h3>What setup writes</h3>
         <ul>
-          <li><code>eduorchestrate.config.json</code> with your profile and schedule</li>
+          <li><code>kordexa.config.json</code> with your profile and schedule</li>
           <li>Adapter files for each supported agent</li>
           <li><code>data/30-day-plan.json</code>, the harness, learning sources and first research digest</li>
-          <li><code>.github/workflows/eduorchestrate-daily.yml</code> for scheduled delivery</li>
+          <li><code>.github/workflows/kordexa-daily.yml</code> for scheduled delivery</li>
           <li><code>.env.local</code> with SMTP settings, plus <code>.gitignore</code> entries</li>
         </ul>
       </section>
@@ -82,13 +81,13 @@
       <section id="loop">
         <h2>Daily workflow</h2>
         <p>A typical day runs from loading context to logging proof:</p>
-        <div class="code-block"><pre><code>npx eduorchestrate harness
-npx eduorchestrate status
-npx eduorchestrate research --day 8
-npx eduorchestrate send-today --dry-run
-npx eduorchestrate log-progress --day 8 --completed "Built search demo" \
+        <div class="code-block"><pre><code>npx kordexa harness
+npx kordexa status
+npx kordexa research --day 8
+npx kordexa send-today --dry-run
+npx kordexa log-progress --day 8 --completed "Built search demo" \
   --evidence "github.com/me/search-demo" --minutes 90 --confidence 4
-npx eduorchestrate progress-card</code></pre></div>
+npx kordexa progress-card</code></pre></div>
         <ol>
           <li><strong>Load the harness.</strong> It tells the agent what to load and what to keep out of chat.</li>
           <li><strong>Check status.</strong> See the active day, next action and momentum.</li>
@@ -126,7 +125,7 @@ npx eduorchestrate progress-card</code></pre></div>
 
       <section id="cli">
         <h2>CLI reference</h2>
-        <p>Run each command as <code>npx eduorchestrate &lt;command&gt;</code>. With no command, it starts setup.</p>
+        <p>Run each command as <code>npx kordexa &lt;command&gt;</code>. With no command, it starts setup.</p>
         <div class="table-wrap"><table>
           <thead><tr><th scope="col">Command</th><th scope="col">What it does</th><th scope="col">Key flags</th></tr></thead>
           <tbody>
@@ -155,13 +154,13 @@ npx eduorchestrate progress-card</code></pre></div>
         <div class="table-wrap"><table>
           <thead><tr><th scope="col">Runtime</th><th scope="col">Adapter file</th></tr></thead>
           <tbody>
-            <tr><td>Claude Code</td><td><code>.claude/skills/eduorchestrate/SKILL.md</code></td></tr>
+            <tr><td>Claude Code</td><td><code>.claude/skills/kordexa/SKILL.md</code></td></tr>
             <tr><td>Codex and generic agents</td><td><code>AGENTS.md</code></td></tr>
             <tr><td>Gemini</td><td><code>GEMINI.md</code></td></tr>
-            <tr><td>OpenClaw</td><td><code>.eduorchestrate/adapters/openclaw/SKILL.md</code></td></tr>
-            <tr><td>Antigravity</td><td><code>.eduorchestrate/adapters/antigravity/manifest.json</code></td></tr>
-            <tr><td>Hermas</td><td><code>.eduorchestrate/adapters/hermas/manifest.json</code></td></tr>
-            <tr><td>MCP clients</td><td><code>.eduorchestrate/mcp/manifest.json</code></td></tr>
+            <tr><td>OpenClaw</td><td><code>.kordexa/adapters/openclaw/SKILL.md</code></td></tr>
+            <tr><td>Antigravity</td><td><code>.kordexa/adapters/antigravity/manifest.json</code></td></tr>
+            <tr><td>Hermas</td><td><code>.kordexa/adapters/hermas/manifest.json</code></td></tr>
+            <tr><td>MCP clients</td><td><code>.kordexa/mcp/manifest.json</code></td></tr>
           </tbody>
         </table></div>
       </section>
@@ -180,7 +179,7 @@ npx eduorchestrate progress-card</code></pre></div>
           </tbody>
         </table></div>
         <p>Keep these in <code>.env.local</code> for local sends. For scheduled sends, print the GitHub secret commands with:</p>
-        <div class="code-block"><button type="button" data-copy="npx eduorchestrate setup-secrets">Copy</button><pre><code>npx eduorchestrate setup-secrets</code></pre></div>
+        <div class="code-block"><button type="button" data-copy="npx kordexa setup-secrets">Copy</button><pre><code>npx kordexa setup-secrets</code></pre></div>
       </section>
 
       <section id="data">
@@ -204,7 +203,7 @@ npx eduorchestrate progress-card</code></pre></div>
       <section id="troubleshooting">
         <h2>Troubleshooting</h2>
         <p>Start with the built-in check:</p>
-        <div class="code-block"><button type="button" data-copy="npx eduorchestrate doctor">Copy</button><pre><code>npx eduorchestrate doctor</code></pre></div>
+        <div class="code-block"><button type="button" data-copy="npx kordexa doctor">Copy</button><pre><code>npx kordexa doctor</code></pre></div>
         <div class="table-wrap"><table>
           <thead><tr><th scope="col">Symptom</th><th scope="col">Fix</th></tr></thead>
           <tbody>
@@ -220,7 +219,7 @@ npx eduorchestrate progress-card</code></pre></div>
       <section id="release-notes">
         <h2>Release notes</h2>
         <h3>Phase 1: launch-ready setup</h3>
-        <aside class="callout"><strong>Coming with the first <code>kordexa</code> npm release.</strong> The commands below aren't available from npm yet. Keep using <code>npx eduorchestrate</code> until the release is published.</aside>
+        <aside class="callout"><strong>Available now.</strong> Phase 1 is included in <code>kordexa</code> 0.4.2 on npm.</aside>
         <div class="table-wrap"><table>
           <thead><tr><th scope="col">Area</th><th scope="col">What changes</th></tr></thead>
           <tbody>
