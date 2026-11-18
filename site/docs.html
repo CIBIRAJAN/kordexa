@@ -48,6 +48,7 @@
       <a href="#data">Data and state</a>
       <h2>Support</h2>
       <a href="#troubleshooting">Troubleshooting</a>
+      <a href="#release-notes">Release notes</a>
       <a href="#license">License</a>
     </nav>
 
@@ -213,6 +214,26 @@ npx eduorchestrate progress-card</code></pre></div>
             <tr><td>A shorter plan came back with 30 days</td><td>This is expected. The 30-day minimum is fixed.</td></tr>
             <tr><td>Links show searches instead of results</td><td>The lookup ran offline or was rate limited. Run it again online.</td></tr>
             <tr><td>Email works locally but not in Actions</td><td>Actions can't read <code>.env.local</code>. Add the values as GitHub secrets.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="release-notes">
+        <h2>Release notes</h2>
+        <h3>Phase 1: launch-ready setup</h3>
+        <aside class="callout"><strong>Coming with the first <code>kordexa</code> npm release.</strong> The commands below aren't available from npm yet. Keep using <code>npx eduorchestrate</code> until the release is published.</aside>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Area</th><th scope="col">What changes</th></tr></thead>
+          <tbody>
+            <tr><td>Package name</td><td>Kordexa installs and runs as <code>npx kordexa</code>. The <code>/eduorchestrate</code> commands inside AI agents stay available.</td></tr>
+            <tr><td>Instruction files</td><td>Setup keeps your content in <code>AGENTS.md</code> and <code>GEMINI.md</code> and updates only its marked section.</td></tr>
+            <tr><td>Running setup again</td><td>Your email login, API keys, profile, progress and start date are kept.</td></tr>
+            <tr><td>Restarting a plan</td><td><code>npx kordexa --yes --restart</code> starts the plan again from today.</td></tr>
+            <tr><td>Scheduled email</td><td>Setup creates one workflow that works in learner projects, so the daily email is sent once.</td></tr>
+            <tr><td>Custom workflows</td><td>Workflows you've edited are never replaced, and Kordexa warns you if one could send duplicate email.</td></tr>
+            <tr><td>Settings file</td><td><code>kordexa.config.json</code> is the main settings file. Older projects with only <code>eduorchestrate.config.json</code> still load.</td></tr>
+            <tr><td>Current day</td><td>Status and the AI agent continue from the earliest unfinished day.</td></tr>
+            <tr><td>Health check</td><td><code>doctor</code> reports <code>ready</code>, <code>needs-setup</code>, <code>needs-upgrade</code> or <code>needs-email-setup</code>, with the next step to take.</td></tr>
           </tbody>
         </table></div>
       </section>

@@ -55,6 +55,7 @@ const paletteItems = [
   ["Features", "Section", `${home}#features`],
   ["Role blueprints", "Section", `${home}#roles`],
   ["Compare tools", "Section", `${home}#compare`],
+  ["What's new in Phase 1", "Section", `${home}#updates`],
   ["FAQ", "Section", `${home}#faq`],
   ["Documentation", "Docs", "/docs"],
   ["Quickstart", "Docs", "/docs#quickstart"],
@@ -62,6 +63,7 @@ const paletteItems = [
   ["Agent integrations", "Docs", "/docs#agents"],
   ["Email and scheduling", "Docs", "/docs#email"],
   ["Troubleshooting", "Docs", "/docs#troubleshooting"],
+  ["Release notes", "Docs", "/docs#release-notes"],
   ...["plan", "status", "harness", "courses", "research --day 1", "links --day 1", "send-today --dry-run", "weekly-summary --week 1", "recommend-next", "progress-card", "terminal-card", "setup-secrets", "doctor"]
     .map((command) => [`${CLI} ${command}`, "Copy", null])
 ];
