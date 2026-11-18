@@ -84,21 +84,21 @@ Traditional learning tools are SaaS dashboards that collect courses users rarely
 
 | File | Lines | Responsibility |
 |---|---|---|
-| [`src/cli.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/cli.js) | 434 | Command router, onboarding, all CLI subcommands |
-| [`src/planner.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/planner.js) | 422 | Role blueprints, plan generation, email rendering |
-| [`src/research.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/research.js) | 286 | Research digests, live link resolution (YouTube/GitHub), offline fallback |
-| [`src/email.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/email.js) | 161 | Custom SMTP client (TLS/STARTTLS), MIME composition |
-| [`src/courses.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/courses.js) | 150 | Role-specific course catalog and newsletter pack |
-| [`src/adapters.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/adapters.js) | 149 | Writes per-agent adapter files for 7+ runtimes |
-| [`src/progression-card.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/progression-card.js) | 137 | Progression card (Markdown, JSON, terminal SVG) |
-| [`src/harness.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/harness.js) | 122 | Token-conscious execution harness |
-| [`src/card-components.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/card-components.js) | 103 | SVG component renderer |
-| [`src/progress.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/progress.js) | 87 | Progress logging, review, weekly summaries, status |
-| [`src/prompts.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/prompts.js) | 76 | Interactive onboarding prompts (stdin/stdout) |
-| [`src/config.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/config.js) | 74 | Config I/O, data-dir resolution, .env parsing |
-| [`src/workflow.js`](file:///Users/cibirajanv/Projects/edu/kordexa/src/workflow.js) | 45 | GitHub Actions YAML generation |
-| [`bin/kordexa.js (with bin/eduorchestrate.js legacy alias)`](file:///Users/cibirajanv/Projects/edu/kordexa/bin/kordexa.js (with bin/eduorchestrate.js legacy alias)) | 7 | Entry point shebang |
-| [`tests/node/eduorchestrate.test.js`](file:///Users/cibirajanv/Projects/edu/kordexa/tests/node/eduorchestrate.test.js) | 466 | Node.js built-in test runner suite |
+| [`src/cli.js`](src/cli.js) | 434 | Command router, onboarding, all CLI subcommands |
+| [`src/planner.js`](src/planner.js) | 422 | Role blueprints, plan generation, email rendering |
+| [`src/research.js`](src/research.js) | 286 | Research digests, live link resolution (YouTube/GitHub), offline fallback |
+| [`src/email.js`](src/email.js) | 161 | Custom SMTP client (TLS/STARTTLS), MIME composition |
+| [`src/courses.js`](src/courses.js) | 150 | Role-specific course catalog and newsletter pack |
+| [`src/adapters.js`](src/adapters.js) | 149 | Writes per-agent adapter files for 7+ runtimes |
+| [`src/progression-card.js`](src/progression-card.js) | 137 | Progression card (Markdown, JSON, terminal SVG) |
+| [`src/harness.js`](src/harness.js) | 122 | Token-conscious execution harness |
+| [`src/card-components.js`](src/card-components.js) | 103 | SVG component renderer |
+| [`src/progress.js`](src/progress.js) | 87 | Progress logging, review, weekly summaries, status |
+| [`src/prompts.js`](src/prompts.js) | 76 | Interactive onboarding prompts (stdin/stdout) |
+| [`src/config.js`](src/config.js) | 74 | Config I/O, data-dir resolution, .env parsing |
+| [`src/workflow.js`](src/workflow.js) | 45 | GitHub Actions YAML generation |
+| [`bin/kordexa.js (with bin/eduorchestrate.js legacy alias)`](bin/kordexa.js (with bin/eduorchestrate.js legacy alias)) | 7 | Entry point shebang |
+| [`tests/node/eduorchestrate.test.js`](tests/node/eduorchestrate.test.js) | 466 | Node.js built-in test runner suite |
 
 **Total source:** ~2,253 lines (src/ + bin/)  
 **Total with tests:** ~2,719 lines
@@ -194,9 +194,9 @@ All state is file-backed JSON in `data/` (git-ignored). There is no database, no
 
 ### 6.1 Skill Files
 
-The canonical skill is at [`skills/eduorchestrate/SKILL.md`](file:///Users/cibirajanv/Projects/edu/kordexa/skills/eduorchestrate/SKILL.md) with references:
-- [`references/agent-contracts.md`](file:///Users/cibirajanv/Projects/edu/kordexa/skills/eduorchestrate/references/agent-contracts.md) — Defines the 6 typed agent roles
-- [`references/learning-system.md`](file:///Users/cibirajanv/Projects/edu/kordexa/skills/eduorchestrate/references/learning-system.md) — Learning system design
+The canonical skill is at [`skills/eduorchestrate/SKILL.md`](skills/eduorchestrate/SKILL.md) with references:
+- [`references/agent-contracts.md`](skills/eduorchestrate/references/agent-contracts.md) — Defines the 6 typed agent roles
+- [`references/learning-system.md`](skills/eduorchestrate/references/learning-system.md) — Learning system design
 
 ### 6.2 Adapters Written on Setup
 
