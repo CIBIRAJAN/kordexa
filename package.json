@@ -36,5 +36,12 @@
   ],
   "author": "Kordexa Contributors",
   "homepage": "https://kordexa-learn.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CIBIRAJAN/kordexa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CIBIRAJAN/kordexa/issues"
+  },
   "license": "MIT"
 }

@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  Kordexa — AI-powered daily learning command center
-//  https://eolearn.vercel.app · https://github.com/kordexa/kordexa
+//  https://eolearn.vercel.app · https://github.com/CIBIRAJAN/kordexa
 //
 //  BOUNDARY DECISION, read this first.
 //
@@ -171,7 +171,7 @@ model {
   eduorchestrate = softwareSystem 'Kordexa' 'Turns a target job role into an adaptive plan with a fixed 30-day minimum, sourced daily research, scheduled e-mail and skill progression cards. Runs locally inside whichever coding agent the learner already uses.' {
     technology 'Node 18+ · zero runtime dependencies · MIT'
     link https://eolearn.vercel.app 'Product site'
-    link https://github.com/kordexa/kordexa 'Source'
+    link https://github.com/CIBIRAJAN/kordexa 'Source'
 
     // ── the CLI: every command runs through here ──────────────────────────
     cli = container 'Command-line interface' 'One dependency-free entry point. Interactive setup on a bare invocation, then one subcommand per step of the daily loop.' {

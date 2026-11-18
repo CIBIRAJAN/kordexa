@@ -250,6 +250,8 @@ tests/node/                # Node regression tests
 ## <img src="https://api.iconify.design/lucide:flask-conical.svg?color=%23e97926&height=26" height="26" /> Development
 
 ```bash
+git clone https://github.com/CIBIRAJAN/kordexa.git
+cd kordexa
 npm test            # run the Node regression suite
 npx .               # run the CLI locally before publishing
 ```

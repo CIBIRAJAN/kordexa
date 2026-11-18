@@ -25,7 +25,7 @@ Kordexa is engineered with zero external runtime dependencies. Replication requi
 
 ### Step 1: Clone the Repository
 ```bash
-git clone https://github.com/kordexa/kordexa.git
+git clone https://github.com/CIBIRAJAN/kordexa.git
 cd Kordexa
 ```
 
