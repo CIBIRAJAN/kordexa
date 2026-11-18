@@ -455,7 +455,7 @@ function terminalCard() {
 function setupSecrets() {
   const config = loadConfig();
   const env = loadEnvFile(path.join(process.cwd(), ".env.local"));
-  const commands = [
+  const commands = env.RESEND_API_KEY ? ["gh secret set RESEND_API_KEY"] : [
     secretCommand("SMTP_HOST", env.SMTP_HOST || "<smtp-host>"),
     secretCommand("SMTP_PORT", env.SMTP_PORT || "465"),
     secretCommand("SMTP_USER", env.SMTP_USER || "<smtp-user>"),

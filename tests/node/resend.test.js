@@ -138,6 +138,35 @@ test("a dry run never contacts Resend", async () => {
   });
 });
 
+test("the scheduled workflow passes Resend settings from GitHub secrets", async () => {
+  await inProject(async (dir) => {
+    const workflow = fs.readFileSync(path.join(dir, ".github/workflows/kordexa-daily.yml"), "utf8");
+    assert.match(workflow, /RESEND_API_KEY: \$\{\{ secrets\.RESEND_API_KEY \}\}/);
+    assert.match(workflow, /RESEND_FROM: \$\{\{ secrets\.RESEND_FROM \}\}/);
+    assert.doesNotMatch(workflow, new RegExp(TEST_KEY));
+  });
+});
+
+test("setup upgrades the earlier generated workflow to include Resend", async () => {
+  await inProject(async (dir) => {
+    const file = path.join(dir, ".github/workflows/kordexa-daily.yml");
+    const earlier = fs.readFileSync(file, "utf8").replace(/ {10}RESEND_API_KEY: .*\n {10}RESEND_FROM: .*\n/, "");
+    fs.writeFileSync(file, earlier);
+    assert.equal((await main(["doctor"])).status, "needs-upgrade");
+    await main(["--yes", "--offline"]);
+    assert.match(fs.readFileSync(file, "utf8"), /RESEND_API_KEY/);
+    assert.equal((await main(["doctor"])).status, "ready");
+  });
+});
+
+test("setup-secrets asks for the Resend key without printing it", async () => {
+  await inProject(async () => {
+    const result = await main(["setup-secrets"]);
+    assert.deepEqual(result.commands, ["gh secret set RESEND_API_KEY"]);
+    assert.doesNotMatch(JSON.stringify(result), new RegExp(TEST_KEY));
+  });
+});
+
 test("doctor counts a Resend key as connected email", async () => {
   await inProject(async () => {
     const result = await main(["doctor"]);

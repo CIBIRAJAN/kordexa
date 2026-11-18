@@ -79,6 +79,8 @@ export function workflowContent(config) {
     "          SMTP_USER: ${{ secrets.SMTP_USER }}",
     "          SMTP_PASS: ${{ secrets.SMTP_PASS }}",
     "          SMTP_FROM: ${{ secrets.SMTP_FROM }}",
+    "          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}",
+    "          RESEND_FROM: ${{ secrets.RESEND_FROM }}",
     `        run: npx --yes kordexa@${PACKAGE_VERSION} send-today`,
     ""
   ].join("\n");
@@ -128,6 +130,7 @@ function normalizeWorkflow(content) {
 
 const GENERATED_WORKFLOWS = new Set([
   workflowContent({}),
+  workflowContent({}).replace(/ {10}RESEND_API_KEY: .*\n {10}RESEND_FROM: .*\n/, ""),
   previousWorkflow("Kordexa", "node bin/kordexa.js send-today || node bin/eduorchestrate.js send-today"),
   previousWorkflow("EduOrchestrate", "node bin/eduorchestrate.js send-today")
 ].map(normalizeWorkflow));
