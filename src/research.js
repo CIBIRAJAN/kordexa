@@ -257,12 +257,19 @@ export function appendResearchIndex(config, digestPath, digest) {
   writeJson(indexPath, existing);
 }
 
+const ROLE_PATTERNS = [
+  [/agentic|llm|ai engineer|artificial intelligence|machine learning/i, "agentic-ai"],
+  [/full.?stack|frontend|backend|web/i, "full-stack"],
+  [/cyber|security|soc|threat/i, "cybersecurity"],
+  [/data scientist|data science|analytics|ml engineer/i, "data-science"]
+];
+
+export function hasRoleMatch(role) {
+  return ROLE_PATTERNS.some(([pattern]) => pattern.test(role));
+}
+
 export function inferRoleKey(role) {
-  if (/agentic|llm|ai engineer|artificial intelligence|machine learning/i.test(role)) return "agentic-ai";
-  if (/full.?stack|frontend|backend|web/i.test(role)) return "full-stack";
-  if (/cyber|security|soc|threat/i.test(role)) return "cybersecurity";
-  if (/data scientist|data science|analytics|ml engineer/i.test(role)) return "data-science";
-  return "agentic-ai";
+  return ROLE_PATTERNS.find(([pattern]) => pattern.test(role))?.[1] || "agentic-ai";
 }
 
 function seedSources(key) {

@@ -1,6 +1,6 @@
 {
   "name": "kordexa",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Universal AI agent skill and daily learning orchestrator for job-role learners.",
   "type": "module",
   "bin": {
