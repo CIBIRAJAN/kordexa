@@ -2,6 +2,9 @@ import fs from "node:fs";
 import path from "node:path";
 import { ensureDir } from "./config.js";
 
+const { version: PACKAGE_VERSION } = JSON.parse(fs.readFileSync(new URL("../package.json", import.meta.url), "utf8"));
+const GENERATED_WORKFLOW = /name: (?:Kordexa|EduOrchestrate) Daily Plan[\s\S]*send-today/;
+
 export function cronFromTime(time, timezone = "UTC") {
   const match = /^(\d{1,2}):(\d{2})$/.exec(time || "08:00");
   if (!match) return "0 8 * * *";
@@ -14,17 +17,54 @@ export function cronFromTime(time, timezone = "UTC") {
 
 export function writeGithubWorkflow(config, rootDir = process.cwd()) {
   const workflowPath = path.join(rootDir, ".github/workflows/kordexa-daily.yml");
-  const legacyPath = path.join(rootDir, ".github/workflows/eduorchestrate-daily.yml");
   ensureDir(path.dirname(workflowPath));
-  const content = workflowContent(config);
-  fs.writeFileSync(workflowPath, content, "utf8");
-  fs.writeFileSync(legacyPath, content, "utf8");
+  fs.writeFileSync(workflowPath, workflowContent(config), "utf8");
+  removeGeneratedLegacyWorkflow(rootDir);
   return workflowPath;
 }
 
+// Two scheduled workflows would send the daily email twice. Only a file this
+// tool generated is removed, so a learner's own workflow is left alone.
+function removeGeneratedLegacyWorkflow(rootDir) {
+  const legacyPath = path.join(rootDir, ".github/workflows/eduorchestrate-daily.yml");
+  if (fs.existsSync(legacyPath) && GENERATED_WORKFLOW.test(fs.readFileSync(legacyPath, "utf8"))) {
+    fs.rmSync(legacyPath);
+  }
+}
+
 export function workflowContent(config) {
-  const cron = cronFromTime(config.schedule?.dailyEmailTime, config.schedule?.timezone);
-  return `name: Kordexa Daily Plan\n\non:\n  schedule:\n    # GitHub Actions cron is UTC. Generated from ${config.schedule?.dailyEmailTime || "08:00"} ${config.schedule?.timezone || "UTC"}.\n    - cron: "${cron}"\n  workflow_dispatch:\n\njobs:\n  send-daily-plan:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: "20"\n      - run: npm install --no-package-lock\n      - name: Send today's Kordexa email\n        env:\n          SMTP_HOST: \${{ secrets.SMTP_HOST }}\n          SMTP_PORT: \${{ secrets.SMTP_PORT }}\n          SMTP_USER: \${{ secrets.SMTP_USER }}\n          SMTP_PASS: \${{ secrets.SMTP_PASS }}\n          SMTP_FROM: \${{ secrets.SMTP_FROM }}\n        run: node bin/kordexa.js send-today || node bin/eduorchestrate.js send-today\n`;
+  const time = config.schedule?.dailyEmailTime || "08:00";
+  const timezone = config.schedule?.timezone || "UTC";
+  return [
+    "name: Kordexa Daily Plan",
+    "",
+    "on:",
+    "  schedule:",
+    `    # GitHub Actions cron is UTC. Generated from ${time} ${timezone}.`,
+    `    - cron: "${cronFromTime(config.schedule?.dailyEmailTime, config.schedule?.timezone)}"`,
+    "  workflow_dispatch:",
+    "",
+    "permissions:",
+    "  contents: read",
+    "",
+    "jobs:",
+    "  send-daily-plan:",
+    "    runs-on: ubuntu-latest",
+    "    steps:",
+    "      - uses: actions/checkout@v4",
+    "      - uses: actions/setup-node@v4",
+    "        with:",
+    '          node-version: "20"',
+    "      - name: Send today's Kordexa email",
+    "        env:",
+    "          SMTP_HOST: ${{ secrets.SMTP_HOST }}",
+    "          SMTP_PORT: ${{ secrets.SMTP_PORT }}",
+    "          SMTP_USER: ${{ secrets.SMTP_USER }}",
+    "          SMTP_PASS: ${{ secrets.SMTP_PASS }}",
+    "          SMTP_FROM: ${{ secrets.SMTP_FROM }}",
+    `        run: npx --yes kordexa@${PACKAGE_VERSION} send-today`,
+    ""
+  ].join("\n");
 }
 
 function localTimeToUtc(hour, minute, timezone) {

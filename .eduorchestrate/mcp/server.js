@@ -19,7 +19,7 @@ const tools = [
 ];
 
 function respond(id, result) { process.stdout.write(JSON.stringify({ jsonrpc: "2.0", id, result }) + "\n"); }
-function run(args) { const out = spawnSync("npx", ["eduorchestrate", ...args], { encoding: "utf8" }); return { stdout: out.stdout, stderr: out.stderr, status: out.status }; }
+function run(args) { const out = spawnSync("npx", ["kordexa", ...args], { encoding: "utf8" }); return { stdout: out.stdout, stderr: out.stderr, status: out.status }; }
 
 const rl = readline.createInterface({ input: process.stdin });
 rl.on("line", (line) => {

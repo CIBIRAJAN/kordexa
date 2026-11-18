@@ -18,7 +18,7 @@ Use EduOrchestrate to guide a learner from a target job role to focused daily ex
 3. Load the compact harness before research, mail, progress, or review work.
 4. Research current and trending updates only when they affect the learner's roadmap or build work.
 5. Convert each day into a practical build action with visible proof.
-6. Send or preview the daily plan email. For every supported agent, not only Codex, a resumable browser or workspace instance must treat resume as a daily-mail checkpoint: load the harness or status, resolve the current plan day, and run `npx eduorchestrate send-today` after SMTP setup. If secrets or approval are missing, run `npx eduorchestrate send-today --dry-run` and ask before sending.
+6. Send or preview the daily plan email. For every supported agent, not only Codex, a resumable browser or workspace instance must treat resume as a daily-mail checkpoint: load the harness or status, resolve the current plan day, and run `npx kordexa send-today` after SMTP setup. If secrets or approval are missing, run `npx kordexa send-today --dry-run` and ask before sending.
 7. Load the prebuilt skill learning card; never recreate or type card UI in the agent response.
 8. Review progress evidence and recommend one next action.
 9. After the plan window, recommend the next skill to learn.
@@ -30,22 +30,22 @@ Prefer practical output over long curriculum text. Keep the active plan narrow: 
 Use the NPX CLI:
 
 ```bash
-npx eduorchestrate
-npx eduorchestrate /eduorchestrate
-npx eduorchestrate plan --role "Agentic AI and LLM Engineer"
-npx eduorchestrate plan --role "Agentic AI and LLM Engineer" --skill "RAG evaluation" --days 45
-npx eduorchestrate harness
-npx eduorchestrate courses
-npx eduorchestrate status
-npx eduorchestrate research --day 1
-npx eduorchestrate send-today --dry-run
-npx eduorchestrate log-progress --day 1 --completed "Built setup" --evidence "Repo link"
-npx eduorchestrate weekly-summary --week 1
-npx eduorchestrate progress-card
-npx eduorchestrate terminal-card
-npx eduorchestrate recommend-next
-npx eduorchestrate setup-secrets
-npx eduorchestrate doctor
+npx kordexa
+npx kordexa /eduorchestrate
+npx kordexa plan --role "Agentic AI and LLM Engineer"
+npx kordexa plan --role "Agentic AI and LLM Engineer" --skill "RAG evaluation" --days 45
+npx kordexa harness
+npx kordexa courses
+npx kordexa status
+npx kordexa research --day 1
+npx kordexa send-today --dry-run
+npx kordexa log-progress --day 1 --completed "Built setup" --evidence "Repo link"
+npx kordexa weekly-summary --week 1
+npx kordexa progress-card
+npx kordexa terminal-card
+npx kordexa recommend-next
+npx kordexa setup-secrets
+npx kordexa doctor
 ```
 
 The CLI stores local state in `data/` by default:

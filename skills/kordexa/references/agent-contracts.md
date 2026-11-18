@@ -1,4 +1,4 @@
-# EduOrchestrate Agent Contracts
+# Kordexa Agent Contracts
 
 ## Shared Input
 

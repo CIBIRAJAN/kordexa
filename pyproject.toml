@@ -20,8 +20,7 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://kordexa.dev"
-Repository = "https://github.com/kordexa/kordexa"
+Homepage = "https://kordexa-learn.vercel.app"
 
 [project.scripts]
 kordexa = "kordexa.cli:main"

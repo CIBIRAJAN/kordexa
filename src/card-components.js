@@ -14,7 +14,7 @@ export function renderSvg(node) {
   return `<${node.tag}${attrs}>${node.children.map(renderSvg).join("")}</${node.tag}>`;
 }
 
-export function TerminalCardSvg({ lines, title = "eduorchestrate-terminal" }) {
+export function TerminalCardSvg({ lines, title = "kordexa-terminal" }) {
   const metrics = terminalMetrics(lines);
   return h(
     "svg",
@@ -24,7 +24,7 @@ export function TerminalCardSvg({ lines, title = "eduorchestrate-terminal" }) {
       height: metrics.height,
       viewBox: `0 0 ${metrics.width} ${metrics.height}`,
       role: "img",
-      "aria-label": "EduOrchestrate terminal progress card"
+      "aria-label": "Kordexa terminal progress card"
     },
     h("rect", { width: metrics.width, height: metrics.height, rx: 14, fill: "#0D1117" }),
     h("rect", {

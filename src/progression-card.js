@@ -9,7 +9,7 @@ const DEFAULT_TERMINAL_CARD = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   "..",
   "skills",
-  "eduorchestrate",
+  "kordexa",
   "assets",
   "default-terminal-card.svg"
 );
@@ -25,7 +25,7 @@ export function buildProgressionCard(config, plan) {
   const latest = progress.at(-1) || null;
   const grid = buildCommitGrid(totalDays, completedDays, activeDay);
   const terminalLines = [
-    "$ npx eduorchestrate status",
+    "$ npx kordexa status",
     `role="${config.learner.targetRole}"`,
     `skill="${plan.primarySkill || config.learner.focusSkill || activePlanDay.primarySkill}"`,
     `progress="${completedDays.size}/${totalDays} days"`,
@@ -37,7 +37,7 @@ export function buildProgressionCard(config, plan) {
 
   return {
     generatedAt: new Date().toISOString(),
-    command: "/eduorchestrate",
+    command: "/kordexa",
     role: config.learner.targetRole,
     skill: plan.primarySkill || config.learner.focusSkill || activePlanDay.primarySkill,
     currentLearning: config.learner.currentLearning || "not specified",
@@ -113,7 +113,7 @@ function renderMarkdownCard({ config, plan, review, grid, terminalLines, activeP
     `Next build: ${review.nextAction}`,
     `Latest proof: ${latest?.evidence || "not logged yet"}`,
     "",
-    "Use `/eduorchestrate` to update the plan, log progress, or get the next action."
+    "Use `/kordexa` to update the plan, log progress, or get the next action."
   ].join("\n");
 }
 

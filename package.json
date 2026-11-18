@@ -1,5 +1,5 @@
 {
-  "name": "@kordexa/core",
+  "name": "kordexa",
   "version": "0.4.2",
   "description": "Universal AI agent skill and daily learning orchestrator for job-role learners.",
   "type": "module",
@@ -36,13 +36,6 @@
     "kordexa"
   ],
   "author": "Kordexa Contributors",
-  "homepage": "https://kordexa.dev/",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kordexa/kordexa.git"
-  },
-  "bugs": {
-    "url": "https://github.com/kordexa/kordexa/issues"
-  },
+  "homepage": "https://kordexa-learn.vercel.app",
   "license": "MIT"
 }

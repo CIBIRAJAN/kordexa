@@ -1,17 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { resolveDataDir, writeJson } from "./config.js";
+import { reviewProgress } from "./progress.js";
 
 export function createHarness(config, plan, mode = "daily") {
-  const activeDay = plan.days[0] || {};
+  const { activeDay: activeDayNumber } = reviewProgress(config, plan);
+  const activeDay = plan.days.find((day) => day.day === activeDayNumber) || plan.days[0] || {};
   return {
     generatedAt: new Date().toISOString(),
-    command: "/eduorchestrate",
+    command: "/kordexa",
     mode,
-    goal: "Run EduOrchestrate with low prompt overhead while preserving research, email, progress, and card behavior.",
+    goal: "Run Kordexa with low prompt overhead while preserving research, email, progress, and card behavior.",
     tokenPolicy: {
-      loadFirst: ["data/eduorchestrate-harness.json", "eduorchestrate.config.json", "data/30-day-plan.json"],
-      avoidLoadingUnlessNeeded: ["data/research-digests/*.json", "data/progression-card.json", "skills/eduorchestrate/assets/default-terminal-card.svg"],
+      loadFirst: ["data/kordexa-harness.json", "kordexa.config.json", "data/30-day-plan.json"],
+      avoidLoadingUnlessNeeded: ["data/research-digests/*.json", "data/progression-card.json", "skills/kordexa/assets/default-terminal-card.svg"],
       neverPaste: ["SVG contents", "SMTP secrets", "full research history", "full 30-day plan when only today is needed"],
       responseShape: "Return one next action, one reason, and the command or artifact path used."
     },
@@ -22,16 +24,16 @@ export function createHarness(config, plan, mode = "daily") {
       "Persist outputs to data/ and summarize only the useful result."
     ],
     cardPolicy: {
-      defaultCard: "skills/eduorchestrate/assets/default-terminal-card.svg",
+      defaultCard: "skills/kordexa/assets/default-terminal-card.svg",
       initializedCopy: "data/default-terminal-card.svg",
       learnerSpecificCard: "data/terminal-card.svg",
-      rule: "Never create, type, or redesign the card UI in the agent. Load the prebuilt asset or run npx eduorchestrate terminal-card."
+      rule: "Never create, type, or redesign the card UI in the agent. Load the prebuilt asset or run npx kordexa terminal-card."
     },
     researchPolicy: {
-      command: "npx eduorchestrate research --day <n>",
-      linksCommand: "npx eduorchestrate links --day <n>",
-      courseCommand: "npx eduorchestrate courses",
-      offlineFlag: "Append --offline (or set EDUORCHESTRATE_OFFLINE=1) to skip live link resolution.",
+      command: "npx kordexa research --day <n>",
+      linksCommand: "npx kordexa links --day <n>",
+      courseCommand: "npx kordexa courses",
+      offlineFlag: "Append --offline (or set KORDEXA_OFFLINE=1) to skip live link resolution.",
       liveResolution: "research resolves a concrete top YouTube video link (digest.topVideo.url) and top GitHub repo (digest.topRepo.url) via Node fetch; the daily email embeds the watchable video link directly. On network failure it falls back to search URLs.",
       keepEffectiveness: [
         "Use official docs and reputable sources first.",
@@ -43,15 +45,15 @@ export function createHarness(config, plan, mode = "daily") {
       maxInlineSources: 5
     },
     emailPolicy: {
-      previewCommand: "npx eduorchestrate send-today --dry-run",
-      sendCommand: "npx eduorchestrate send-today",
+      previewCommand: "npx kordexa send-today --dry-run",
+      sendCommand: "npx kordexa send-today",
       rule: "For manual agent runs, preview before send unless the user explicitly asks to send. For every supported agent, a resumable browser or workspace instance must treat resume as a daily-mail checkpoint: load harness/status, resolve today's plan day, and run send-today after SMTP setup. If secrets or approval are missing, run send-today --dry-run and ask before sending. Scheduled GitHub Actions runs may send after one-time setup. Never expose SMTP_PASS."
     },
     progressPolicy: {
-      logCommand: "npx eduorchestrate log-progress --day <n> --completed \"...\" --evidence \"...\"",
-      statusCommand: "npx eduorchestrate status",
-      weeklyCommand: "npx eduorchestrate weekly-summary --week <n>",
-      nextSkillCommand: "npx eduorchestrate recommend-next"
+      logCommand: "npx kordexa log-progress --day <n> --completed \"...\" --evidence \"...\"",
+      statusCommand: "npx kordexa status",
+      weeklyCommand: "npx kordexa weekly-summary --week <n>",
+      nextSkillCommand: "npx kordexa recommend-next"
     },
     activeDay: {
       day: activeDay.day || 1,
@@ -62,8 +64,8 @@ export function createHarness(config, plan, mode = "daily") {
     },
     artifacts: {
       plan: "data/30-day-plan.json",
-      harness: "data/eduorchestrate-harness.json",
-      harnessMarkdown: "data/eduorchestrate-harness.md",
+      harness: "data/kordexa-harness.json",
+      harnessMarkdown: "data/kordexa-harness.md",
       researchIndex: "data/research-index.json",
       resolvedLinks: "data/links.json",
       learningSources: "data/learning-sources.json",
@@ -95,7 +97,7 @@ export function saveHarness(config, harness) {
 
 function renderHarnessMarkdown(harness) {
   return [
-    "# EduOrchestrate Harness",
+    "# Kordexa Harness",
     "",
     `Mode: ${harness.mode}`,
     "",
@@ -116,7 +118,7 @@ function renderHarnessMarkdown(harness) {
     `- Email send: ${harness.emailPolicy.sendCommand}`,
     `- Email rule: ${harness.emailPolicy.rule}`,
     `- Progress: ${harness.progressPolicy.logCommand}`,
-    `- Card: npx eduorchestrate terminal-card`,
+    `- Card: npx kordexa terminal-card`,
     "",
     "## Card Rule",
     harness.cardPolicy.rule

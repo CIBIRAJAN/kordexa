@@ -302,13 +302,12 @@ function doctor() {
   const configValidation = parsedConfig ? validateConfig(parsedConfig) : { valid: false, errors: ["Missing configuration"] };
 
   const checks = {
-    packageJson: fs.existsSync(path.join(process.cwd(), "package.json")),
-    skill: fs.existsSync(path.join(process.cwd(), "skills", "kordexa", "SKILL.md")) || fs.existsSync(path.join(process.cwd(), "skills", "eduorchestrate", "SKILL.md")),
     agentsMd: fs.existsSync(path.join(process.cwd(), "AGENTS.md")),
     geminiMd: fs.existsSync(path.join(process.cwd(), "GEMINI.md")),
     claudeSkill: fs.existsSync(path.join(process.cwd(), ".claude", "skills", "kordexa", "SKILL.md")) || fs.existsSync(path.join(process.cwd(), ".claude", "skills", "eduorchestrate", "SKILL.md")),
     mcpManifest: fs.existsSync(path.join(process.cwd(), ".kordexa", "mcp", "manifest.json")) || fs.existsSync(path.join(process.cwd(), ".eduorchestrate", "mcp", "manifest.json")),
     config: (configExists && configValidation.valid) || (fs.existsSync(path.join(process.cwd(), "eduorchestrate.config.json")) && validateConfig(readJson(path.join(process.cwd(), "eduorchestrate.config.json"))).valid),
+    workflow: fs.existsSync(path.join(process.cwd(), ".github", "workflows", "kordexa-daily.yml")),
     localEnv: fs.existsSync(path.join(process.cwd(), ".env.local"))
   };
   const result = {
@@ -342,7 +341,7 @@ Commands:
   npx kordexa setup-secrets
   npx kordexa doctor
 
-Note: Legacy command 'eduorchestrate' is supported as a direct alias.
+Note: /eduorchestrate stays available inside agents as a legacy alias for /kordexa.
 `);
 }
 

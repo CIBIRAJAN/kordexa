@@ -317,7 +317,7 @@ export function renderDailyEmail(config, plan, dayNumber, { progressReview = nul
       "",
       `Bridge: ${day.nextDayBridge}`,
       "",
-      "Use /kordexa (or /eduorchestrate) in your agent to adjust the plan or review progress."
+      "Use /kordexa in your agent to adjust the plan or review progress."
     ].join("\n");
   const html = renderDailyEmailHtml({ config, day, timeBox, researchDigest, progressReview, progressionCard, coursePack });
   return {
@@ -417,7 +417,7 @@ function renderDailyEmailHtml({ config, day, timeBox, researchDigest, progressRe
         <p style="margin:18px 0 0;font-size:14px;color:#5e554d;">Bridge: ${escapeHtml(day.nextDayBridge)}</p>
       </div>
     </div>
-    <p style="text-align:center;color:${muted};font-size:12px;margin:14px 0 0;">Use <b>/kordexa</b> (or /eduorchestrate) in your agent to adjust the plan or review progress.</p>
+    <p style="text-align:center;color:${muted};font-size:12px;margin:14px 0 0;">Use <b>/kordexa</b> in your agent to adjust the plan or review progress.</p>
   </div>
 </body></html>`;
 }

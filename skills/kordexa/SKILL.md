@@ -7,7 +7,7 @@ description: Universal /kordexa agent skill for job-role learners. Use when an a
 
 Visible command: `/kordexa`.
 
-If the host agent cannot register slash commands, treat `kordexa` or `use Kordexa` (or legacy `eduorchestrate`) as equivalent to `/kordexa`.
+If the host agent cannot register slash commands, treat `kordexa` or `use Kordexa` (or legacy `kordexa`) as equivalent to `/kordexa`.
 
 ## Core Workflow
 
@@ -51,8 +51,8 @@ npx kordexa doctor
 The CLI stores local state in `data/` by default:
 
 - `30-day-plan.json`
-- `eduorchestrate-harness.json`
-- `eduorchestrate-harness.md`
+- `kordexa-harness.json`
+- `kordexa-harness.md`
 - `learning-sources.json`
 - `learning-sources.md`
 - `research-digests/*.json`
@@ -81,15 +81,15 @@ For exact contracts, read `references/agent-contracts.md`. For learning-loop pol
 
 ## Universal Agent Adapters
 
-The setup command writes adapter files so common agents can honor `/eduorchestrate`:
+The setup command writes adapter files so common agents can honor `/kordexa`:
 
-- Claude Code: `.claude/skills/eduorchestrate/SKILL.md`
+- Claude Code: `.claude/skills/kordexa/SKILL.md`
 - Codex and generic coding agents: `AGENTS.md`
 - Gemini: `GEMINI.md`
-- OpenClaw: `.eduorchestrate/adapters/openclaw/SKILL.md`
-- Antigravity: `.eduorchestrate/adapters/antigravity/manifest.json`
-- Hermas: `.eduorchestrate/adapters/hermas/manifest.json`
-- MCP-capable agents: `.eduorchestrate/mcp/manifest.json`
+- OpenClaw: `.kordexa/adapters/openclaw/SKILL.md`
+- Antigravity: `.kordexa/adapters/antigravity/manifest.json`
+- Hermas: `.kordexa/adapters/hermas/manifest.json`
+- MCP-capable agents: `.kordexa/mcp/manifest.json`
 
 ## Role Blueprints
 

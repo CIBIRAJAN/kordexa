@@ -9,12 +9,10 @@
 **One command** turns a target job role into an adaptive plan, trend-aware research, daily emails, and a skill progression card — running locally inside the agent you already use. Your data, your machine.
 
 <p>
-  <a href="https://www.npmjs.com/package/@kordexa/core"><img alt="npm version" src="https://img.shields.io/npm/v/@kordexa/core?color=e97926&label=npm&logo=npm"></a>
-  <a href="https://pypi.org/project/kordexa/"><img alt="PyPI version" src="https://img.shields.io/pypi/v/kordexa?color=blue&label=pypi&logo=python"></a>
-  <a href="https://nodejs.org"><img alt="node" src="https://img.shields.io/node/v/@kordexa/core?color=2ea043&logo=node.js&logoColor=white"></a>
-  <a href="LICENSE"><img alt="license" src="https://img.shields.io/npm/l/@kordexa/core?color=blue"></a>
+  <a href="https://www.npmjs.com/package/kordexa"><img alt="npm version" src="https://img.shields.io/npm/v/kordexa?color=e97926&label=npm&logo=npm"></a>
+  <a href="https://nodejs.org"><img alt="node" src="https://img.shields.io/node/v/kordexa?color=2ea043&logo=node.js&logoColor=white"></a>
+  <a href="LICENSE"><img alt="license" src="https://img.shields.io/npm/l/kordexa?color=blue"></a>
   <img alt="dependencies" src="https://img.shields.io/badge/dependencies-0-brightgreen">
-  <a href="https://github.com/kordexa/kordexa/pulls"><img alt="PRs welcome" src="https://img.shields.io/badge/PRs-welcome-e97926.svg"></a>
 </p>
 
 <p>
@@ -40,7 +38,7 @@ Most learning tools are SaaS dashboards that collect courses you never finish. K
 - <img src="https://api.iconify.design/lucide:compass.svg?color=%23e97926&height=18" height="18" /> &nbsp;**Role → plan in one command.** Pick a target role and a first skill; get an adaptive plan with a fixed **30-day minimum**.
 - <img src="https://api.iconify.design/lucide:bot.svg?color=%23e97926&height=18" height="18" /> &nbsp;**AI-native & agnostic.** The same `/kordexa` skill works across Claude Code, Codex, Gemini, OpenClaw, Antigravity, Hermas, and any MCP agent.
 - <img src="https://api.iconify.design/lucide:lock.svg?color=%23e97926&height=18" height="18" /> &nbsp;**Local-first & private.** Learning state stays in `data/`; SMTP secrets live in `.env.local` or GitHub Actions — never committed.
-- <img src="https://api.iconify.design/lucide:package.svg?color=%23e97926&height=18" height="18" /> &nbsp;**Zero dependencies.** A dependency-free Node CLI and lightweight Python package. Audit it in an afternoon.
+- <img src="https://api.iconify.design/lucide:package.svg?color=%23e97926&height=18" height="18" /> &nbsp;**Zero dependencies.** A dependency-free Node CLI. Audit it in an afternoon.
 - <img src="https://api.iconify.design/lucide:badge-check.svg?color=%23e97926&height=18" height="18" /> &nbsp;**Open source, MIT.** No account, no paywall, no telemetry.
 
 ---
@@ -50,17 +48,12 @@ Most learning tools are SaaS dashboards that collect courses you never finish. K
 From an agent terminal in your project:
 
 ```bash
-# Via npx (zero installation)
 npx kordexa
-
-# Or via Python pip
-pip install kordexa
-kordexa
 ```
 
 That's it. The interactive setup captures your profile (name, email, target role, current topic, **first-skill focus**, stage, plan length, daily email time, timezone, SMTP), writes the agent adapters, and generates your first 30-day plan.
 
-<div align="center"><sub>Requires Node 18+ (or Python 3.9+). Nothing to install globally — <code>npx</code> handles it.</sub></div>
+<div align="center"><sub>Requires Node 18+. Nothing to install globally — <code>npx</code> handles it.</sub></div>
 
 ---
 
@@ -113,7 +106,7 @@ The same `/kordexa` command (and legacy `/eduorchestrate`) is honored across run
 
 ## <img src="https://api.iconify.design/lucide:terminal.svg?color=%23e97926&height=26" height="26" /> The CLI
 
-Everything runs from one dependency-free CLI (available as `npx kordexa` or via Python `kordexa`). State writes to `data/` and is git-ignored by default.
+Everything runs from one dependency-free CLI (available as `npx kordexa`). State writes to `data/` and is git-ignored by default.
 
 ```bash
 # Plan
@@ -192,9 +185,9 @@ Each day becomes **one build action with visible proof** — research current re
 
 ## <img src="https://api.iconify.design/lucide:send.svg?color=%23e97926&height=26" height="26" /> Autonomous daily delivery
 
-Kordexa doesn't need a browser window or an open agent session to deliver. On setup it writes `.github/workflows/eduorchestrate-daily.yml`, which runs in **GitHub Actions** at your configured time:
+Kordexa doesn't need a browser window or an open agent session to deliver. On setup it writes `.github/workflows/kordexa-daily.yml`, which runs in **GitHub Actions** at your configured time:
 
-- Runs `node bin/kordexa.js send-today` on schedule.
+- Runs `npx kordexa send-today` on schedule, pinned to the version you installed.
 - Pulls SMTP credentials from **GitHub Actions secrets** (`setup-secrets` prints the exact `gh secret set` commands).
 - Advances the day from `schedule.startDate` and **stops after the plan window** instead of repeating the same day forever.
 
@@ -221,7 +214,7 @@ Kordexa includes comprehensive engineering, architecture, testing, and academic 
 | [**Project Audit**](docs/PROJECT_AUDIT.md) | Exhaustive code inspection, verified capabilities, and risk analysis. |
 | [**System Architecture**](docs/SYSTEM_ARCHITECTURE.md) | C4 context, container, and component models with Mermaid sequence diagrams. |
 | [**Product Roadmap**](docs/PRODUCT_ROADMAP.md) | P0–P3 engineering priorities, correctness fixes, and research milestones. |
-| [**Testing Guide**](docs/TESTING.md) | 22-test automated regression suite, isolation mechanics, and benchmarks. |
+| [**Testing Guide**](docs/TESTING.md) | Automated regression suite, isolation mechanics, and benchmarks. |
 | [**Reproducibility Guide**](docs/REPRODUCIBILITY.md) | Step-by-step reproduction instructions, `.env.example`, and CLI examples. |
 | [**Security & Ethics**](docs/SECURITY_AND_ETHICS.md) | STRIDE threat model, credential isolation, and responsible AI practices. |
 | [**Evaluation Plan**](docs/EVALUATION_PLAN.md) | Controlled experimental protocols, metrics, and ablation benchmarks. |
@@ -257,9 +250,7 @@ tests/node/                # Node regression tests
 ## <img src="https://api.iconify.design/lucide:flask-conical.svg?color=%23e97926&height=26" height="26" /> Development
 
 ```bash
-git clone https://github.com/kordexa/kordexa.git
-cd kordexa
-npm test            # run the Node regression suite (22 tests, ~240ms)
+npm test            # run the Node regression suite
 npx .               # run the CLI locally before publishing
 ```
 
@@ -312,18 +303,10 @@ Contributions are welcome! Whether it's a new **role blueprint**, an **agent ada
 
 ---
 
-## <img src="https://api.iconify.design/lucide:trending-up.svg?color=%23e97926&height=26" height="26" /> Star history
-
-<a href="https://star-history.com/#kordexa/kordexa&Date">
-  <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=kordexa/kordexa&type=Date" width="600">
-</a>
-
----
-
 ## <img src="https://api.iconify.design/lucide:scale.svg?color=%23e97926&height=26" height="26" /> License
 
-[MIT](LICENSE) © Kordexa Contributors — your data, your machine.
+[MIT](LICENSE). Kordexa is based on [EduOrchestrate](https://github.com/haroontrailblazer/EduOrchestrate) by [Haroon K M](https://haroon.pro/).
 
 <div align="center">
-<sub>Built for learners who want proof, not passive curriculum. Star the repo if it helps you land the role.</sub>
+<sub>Built for learners who want proof, not passive curriculum.</sub>
 </div>

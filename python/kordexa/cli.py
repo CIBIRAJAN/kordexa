@@ -22,7 +22,7 @@ def run_command(argv: list[str] | None = None) -> int:
     if bin_js.exists():
         cmd = ["node", str(bin_js)] + argv
     else:
-        cmd = ["npx", "@kordexa/core"] + argv
+        cmd = ["npx", "kordexa"] + argv
     return subprocess.call(cmd)
 
 

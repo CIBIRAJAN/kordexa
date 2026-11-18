@@ -1,19 +1,19 @@
 {
-  "name": "eduorchestrate",
-  "command": "node .eduorchestrate/mcp/server.js",
+  "name": "kordexa",
+  "command": "node .kordexa/mcp/server.js",
   "tools": [
-    "eduorchestrate_onboard",
-    "eduorchestrate_harness",
-    "eduorchestrate_courses",
-    "eduorchestrate_plan30",
-    "eduorchestrate_research",
-    "eduorchestrate_links",
-    "eduorchestrate_send_today",
-    "eduorchestrate_log_progress",
-    "eduorchestrate_progress_card",
-    "eduorchestrate_terminal_card",
-    "eduorchestrate_weekly_summary",
-    "eduorchestrate_recommend_next",
-    "eduorchestrate_status"
+    "kordexa_onboard",
+    "kordexa_harness",
+    "kordexa_courses",
+    "kordexa_plan30",
+    "kordexa_research",
+    "kordexa_links",
+    "kordexa_send_today",
+    "kordexa_log_progress",
+    "kordexa_progress_card",
+    "kordexa_terminal_card",
+    "kordexa_weekly_summary",
+    "kordexa_recommend_next",
+    "kordexa_status"
   ]
 }

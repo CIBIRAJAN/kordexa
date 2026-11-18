@@ -1,4 +1,4 @@
-# EduOrchestrate Learning System
+# Kordexa Learning System
 
 ## Operating Loop
 
@@ -15,14 +15,14 @@ The system is not a motivational chatbot. It is a training orchestrator that pro
 
 ## Harness Policy
 
-Use `npx eduorchestrate harness` as the first command for agent runs after initialization.
+Use `npx kordexa harness` as the first command for agent runs after initialization.
 
 The harness keeps the skill token-conscious by:
 
-- loading `data/eduorchestrate-harness.json` before broader docs
+- loading `data/kordexa-harness.json` before broader docs
 - loading only the active plan day unless the user asks for a full review
 - calling CLI programs for research, mail, progress, and cards instead of recreating their outputs
-- using `npx eduorchestrate courses` for role-specific official course catalogs and newsletters
+- using `npx kordexa courses` for role-specific official course catalogs and newsletters
 - keeping source digests as artifacts and summarizing only the useful entries
 - previewing email with `send-today --dry-run` before sending unless the user explicitly asks to send
 - treating every resumable browser or workspace agent session as a daily-mail checkpoint on resume: load harness/status, resolve today's plan day, and run `send-today` after SMTP setup, or `send-today --dry-run` when secrets or approval are missing
@@ -76,7 +76,7 @@ Use confidence and blockers to decide whether to advance, repeat, or narrow the 
 
 The card UI is a prebuilt program and bundled asset, not an agent-authored response. Never type, recreate, or hand-design the card in prompts.
 
-On initialization, copy the bundled default card from `skills/eduorchestrate/assets/default-terminal-card.svg` to `data/default-terminal-card.svg`.
+On initialization, copy the bundled default card from `skills/kordexa/assets/default-terminal-card.svg` to `data/default-terminal-card.svg`.
 
 When learner-specific state is needed, call the prebuilt CLI program to write `data/progression-card.md`, `data/progression-card.json`, and `data/terminal-card.svg`.
 
@@ -87,12 +87,12 @@ The card must include:
 - current learning topic
 - completed days and total plan days
 - GitHub-commit-style grid where `#` is complete, `>` is active, and `.` is upcoming
-- terminal card with `npx eduorchestrate status`, role, skill, progress, current day, next action, latest evidence, and momentum
+- terminal card with `npx kordexa status`, role, skill, progress, current day, next action, latest evidence, and momentum
 - SVG terminal-card replica in `data/terminal-card.svg`
 
 Keep the card text portable so any agent can load it into email, chat, Markdown previews, or issue comments.
 
-Agents should load `data/default-terminal-card.svg`, `data/terminal-card.svg`, or call `npx eduorchestrate progress-card` / `npx eduorchestrate terminal-card`. The repo owns the compact component renderer.
+Agents should load `data/default-terminal-card.svg`, `data/terminal-card.svg`, or call `npx kordexa progress-card` / `npx kordexa terminal-card`. The repo owns the compact component renderer.
 
 ## Freshness Policy
 
@@ -107,7 +107,7 @@ Do not browse for stable fundamentals unless the learner asks for sources.
 
 ## Course Source Policy
 
-Use `npx eduorchestrate courses` to produce `data/learning-sources.json` and `data/learning-sources.md`.
+Use `npx kordexa courses` to produce `data/learning-sources.json` and `data/learning-sources.md`.
 
 Course recommendations should:
 

@@ -64,7 +64,7 @@ test("one-command setup writes universal agent adapters and plan", async () => {
       ".claude/commands/eduorchestrate-card.md",
       ".claude/commands/eduorchestrate-weekly.md",
       ".claude/commands/eduorchestrate-next.md",
-      ".github/workflows/eduorchestrate-daily.yml",
+      ".github/workflows/kordexa-daily.yml",
       "data/30-day-plan.json",
       "data/eduorchestrate-harness.json",
       "data/eduorchestrate-harness.md",
@@ -82,8 +82,8 @@ test("one-command setup writes universal agent adapters and plan", async () => {
 
     const statusCmd = fs.readFileSync(path.join(dir, ".claude/commands/eduorchestrate-status.md"), "utf8");
     assert.match(statusCmd, /^---/);
-    assert.match(statusCmd, /allowed-tools: Bash\(npx eduorchestrate status/);
-    assert.match(statusCmd, /npx eduorchestrate status/);
+    assert.match(statusCmd, /allowed-tools: Bash\(npx kordexa status/);
+    assert.match(statusCmd, /npx kordexa status/);
     const researchCmd = fs.readFileSync(path.join(dir, ".claude/commands/eduorchestrate-research.md"), "utf8");
     assert.match(researchCmd, /argument-hint:/);
 
@@ -94,7 +94,7 @@ test("one-command setup writes universal agent adapters and plan", async () => {
     assert.match(config.schedule.startDate, /^\d{4}-\d{2}-\d{2}$/);
     assert.equal(harness.mode, "init");
     assert.equal(harness.tokenPolicy.neverPaste.includes("SVG contents"), true);
-    assert.equal(harness.emailPolicy.previewCommand, "npx eduorchestrate send-today --dry-run");
+    assert.equal(harness.emailPolicy.previewCommand, "npx kordexa send-today --dry-run");
     assert.equal(harness.researchPolicy.maxInlineSources, 5);
     const learningSources = JSON.parse(fs.readFileSync(path.join(dir, "data/learning-sources.json"), "utf8"));
     assert.equal(learningSources.roleKey, "agentic-ai");
@@ -110,10 +110,10 @@ test("one-command setup writes universal agent adapters and plan", async () => {
     assert.match(card, /^## RAG evaluation/m);
     assert.match(card, /GitHub-style learning progression:/);
     assert.match(card, /Terminal card:/);
-    assert.match(card, /\$ npx eduorchestrate status/);
+    assert.match(card, /\$ npx kordexa status/);
     const svg = fs.readFileSync(path.join(dir, "data/terminal-card.svg"), "utf8");
     assert.match(svg, /^<svg /);
-    assert.match(svg, /eduorchestrate-terminal/);
+    assert.match(svg, /kordexa-terminal/);
     assert.match(svg, /role=&quot;Agentic AI and LLM Engineer&quot;/);
     assert.match(svg, /skill=&quot;RAG evaluation&quot;/);
     const defaultSvg = fs.readFileSync(path.join(dir, "data/default-terminal-card.svg"), "utf8");
@@ -189,7 +189,7 @@ test("daily email dry-run payload contains slash command and references", () => 
   const plan = generate30DayPlan(config.learner);
   const email = renderDailyEmail(config, plan, 1);
   assert.equal(email.to, "learner@example.com");
-  assert.match(email.text, /\/eduorchestrate/);
+  assert.match(email.text, /\/kordexa/);
   assert.match(email.text, /youtube\.com/);
   assert.match(email.text, /github\.com/);
   assert.match(email.text, /Timebox:/);
