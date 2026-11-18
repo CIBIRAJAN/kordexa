@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "kordexa"
-version = "0.4.3"
+version = "0.4.4"
 description = "Universal AI agent skill and daily learning orchestrator for job-role learners."
 readme = "README.md"
 requires-python = ">=3.9"

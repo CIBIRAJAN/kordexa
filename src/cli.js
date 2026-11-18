@@ -12,6 +12,7 @@ import { appendProgress, createWeeklySummary, planStatus, reviewProgress } from 
 import { SetupCancelled, askEmailDelivery, collectOnboarding, createTerminalIO } from "./prompts.js";
 import { appendResearchIndex, createResearchDigest, enrichDigestLinks, saveResearchDigest } from "./research.js";
 import { parsePlanDays } from "./setup-answers.js";
+import { renderView, terminalSupportsColor } from "./terminal-view.js";
 import { workflowStatus, writeGithubWorkflow } from "./workflow.js";
 
 const COMMANDS = ["plan", "status", "harness", "courses", "research", "links", "send-today", "log-progress", "weekly-summary", "recommend-next", "progress-card", "terminal-card", "setup-email", "setup-secrets", "doctor", "help"];
@@ -37,7 +38,11 @@ const SETUP_VALUE_FLAGS = {
 };
 const SETUP_SWITCHES = ["--yes", "--non-interactive", "--offline", "--restart", "--allow-home", "--json"];
 
+// People at a terminal get readable results. Agents, scripts and --json get JSON.
+let jsonOutput = true;
+
 export async function main(argv = []) {
+  jsonOutput = argv.includes("--json") || !process.stdout.isTTY;
   const command = normalizeCommand(argv[0]);
   if (command === "send-today") return sendToday(argv.slice(1));
   if (command === "plan") return regeneratePlan(argv.slice(1));
@@ -168,7 +173,7 @@ async function init(argv) {
   appendResearchIndex(config, digestPath, digest);
   const workflowPath = writeGithubWorkflow(config);
   const { warnings } = workflowStatus();
-  if (!nonInteractive && !argv.includes("--json")) {
+  if ((!nonInteractive || !jsonOutput) && !argv.includes("--json")) {
     printSetupComplete(config, plan, answers.emailConnected, warnings);
     return;
   }
@@ -272,7 +277,7 @@ function regeneratePlan(argv) {
   const plan = generate30DayPlan(config.learner);
   writeDataJson(config, "30-day-plan.json", plan);
   saveConfig(config);
-  outputJson({ status: "saved", plan: "data/30-day-plan.json", days: plan.days.length });
+  present("plan", { status: "saved", plan: "data/30-day-plan.json", days: plan.days.length }, { plan });
 }
 
 async function sendToday(argv) {
@@ -289,7 +294,7 @@ async function sendToday(argv) {
       recommendation: plan.nextSkillRecommendation
     };
     writeDataJson(config, "latest-email.json", { generatedAt: new Date().toISOString(), ...result });
-    outputJson(result);
+    present("skipped", result);
     return;
   }
   const progressReview = reviewProgress(config, plan);
@@ -314,7 +319,17 @@ async function sendToday(argv) {
     ? await sendWithResend({ resend, message, idempotencyKey: dailyEmailKey(message.to, config.schedule?.startDate, day) })
     : await sendMail({ smtp, message, dryRun });
   writeDataJson(config, "latest-email.json", { generatedAt: new Date().toISOString(), researchDigest: digestPath, ...result });
-  outputJson(result);
+  const previewPath = path.join(config.dataDir || "data", "email-preview.html");
+  if (dryRun) fs.writeFileSync(path.join(process.cwd(), previewPath), message.html, "utf8");
+  present("email", result, {
+    day: plan.days.find((entry) => entry.day === day) || plan.days[0],
+    digest,
+    review: progressReview,
+    totalDays: plan.days.length,
+    completedDays: progressReview.completedDays,
+    previewPath,
+    emailConnected: Boolean(resend || (smtp.host && smtp.user && smtp.pass))
+  });
 }
 
 export function resolveScheduledDay(config, plan, now = new Date()) {
@@ -328,7 +343,7 @@ export function resolveScheduledDay(config, plan, now = new Date()) {
 
 function showStatus() {
   const { config, plan } = loadRuntime();
-  outputJson(planStatus(config, plan));
+  present("status", planStatus(config, plan));
 }
 
 async function research(argv) {
@@ -339,7 +354,7 @@ async function research(argv) {
   await enrichDigestLinks(digest, { offline: argv.includes("--offline") });
   const digestPath = saveResearchDigest(config, digest);
   appendResearchIndex(config, digestPath, digest);
-  outputJson({ status: "saved", path: digestPath, digest });
+  present("research", { status: "saved", path: digestPath, digest });
 }
 
 async function links(argv) {
@@ -360,7 +375,7 @@ async function links(argv) {
     repos: digest.repos || []
   };
   writeDataJson(config, "links.json", payload);
-  outputJson({ status: "resolved", path: "data/links.json", ...payload });
+  present("links", { status: "resolved", path: "data/links.json", ...payload });
 }
 
 function harness(argv) {
@@ -368,14 +383,14 @@ function harness(argv) {
   const mode = valueAfter(argv, "--mode") || "daily";
   const payload = createHarness(config, plan, mode);
   const paths = saveHarness(config, payload);
-  outputJson({ status: "saved", ...paths, harness: payload });
+  present("harness", { status: "saved", ...paths, harness: payload });
 }
 
 function courses() {
   const { config, plan } = loadRuntime();
   const pack = createCoursePack(config, plan);
   const paths = saveCoursePack(config, pack);
-  outputJson({ status: "saved", ...paths, learningSources: pack });
+  present("courses", { status: "saved", ...paths, learningSources: pack });
 }
 
 function logProgress(argv) {
@@ -400,7 +415,7 @@ function logProgress(argv) {
   const review = reviewProgress(config, plan);
   const cardPaths = saveProgressionCard(config, buildProgressionCard(config, plan));
   writeDataJson(config, "latest-review.json", review);
-  outputJson({ status: "logged", entry, review, progressionCard: cardPaths.markdownPath });
+  present("logged", { status: "logged", entry, review, progressionCard: cardPaths.markdownPath });
 }
 
 function weeklySummary(argv) {
@@ -409,7 +424,7 @@ function weeklySummary(argv) {
   const week = assertWholeNumber(valueAfter(argv, "--week") ?? "1", "--week", 1, totalWeeks);
   const summary = createWeeklySummary(config, plan, week);
   writeDataJson(config, `weekly-summary-${week}.json`, summary);
-  outputJson(summary);
+  present("weekly", summary);
 }
 
 function recommendNext() {
@@ -431,21 +446,21 @@ function recommendNext() {
     ...recommendation
   };
   writeDataJson(config, "next-skill-recommendation.json", payload);
-  outputJson(payload);
+  present("recommendation", payload);
 }
 
 function progressCard() {
   const { config, plan } = loadRuntime();
   const card = buildProgressionCard(config, plan);
   const paths = saveProgressionCard(config, card);
-  outputJson({ status: "saved", ...paths, card });
+  present("card", { status: "saved", ...paths, card });
 }
 
 function terminalCard() {
   const { config, plan } = loadRuntime();
   const card = buildProgressionCard(config, plan);
   const paths = saveProgressionCard(config, card);
-  outputJson({
+  present("terminalCard", {
     status: "saved",
     terminalSvgPath: paths.terminalSvgPath,
     terminalLines: card.terminalLines
@@ -467,7 +482,7 @@ function setupSecrets() {
     note: "Run these after gh auth login. Secrets are not committed.",
     commands
   };
-  outputJson(payload);
+  present("secrets", payload);
   return payload;
 }
 
@@ -513,7 +528,7 @@ function doctor() {
     ...(scheduled.warnings.length ? { warnings: scheduled.warnings } : {}),
     ...(configValidation.errors.length > 0 && configExists ? { configErrors: configValidation.errors } : {})
   };
-  outputJson(result);
+  present("doctor", result);
   return result;
 }
 
@@ -541,6 +556,7 @@ Commands:
   npx kordexa setup-secrets
   npx kordexa doctor
 
+Add --json to any command to get machine-readable output.
 Note: /eduorchestrate stays available inside agents as a legacy alias for /kordexa.
 `);
 }
@@ -630,6 +646,14 @@ function hasPlanDays(plan) {
 
 function writeDataJson(config, fileName, payload) {
   writeJson(path.join(resolveDataDir(config), fileName), payload);
+}
+
+function present(view, payload, context) {
+  if (jsonOutput) {
+    outputJson(payload);
+    return;
+  }
+  console.log(`\n${renderView(view, payload, context, { color: terminalSupportsColor(), width: process.stdout.columns })}\n`);
 }
 
 function outputJson(payload) {
