@@ -12,6 +12,74 @@ export function smtpConfigFromEnv(env = process.env) {
   };
 }
 
+const RESEND_ENDPOINT = "https://api.resend.com/emails";
+const RESEND_TEST_SENDER = "Kordexa <onboarding@resend.dev>";
+const RESEND_TIMEOUT_MS = 15000;
+const RESEND_MAX_ATTEMPTS = 3;
+
+export function resendConfigFromEnv(env = process.env) {
+  if (!env.RESEND_API_KEY) return null;
+  return { apiKey: env.RESEND_API_KEY, from: env.RESEND_FROM || RESEND_TEST_SENDER };
+}
+
+// The key stays the same for one learner's plan day, so a retry can't send twice.
+export function dailyEmailKey(to, startDate, day) {
+  const learner = crypto.createHash("sha256").update(String(to).toLowerCase()).digest("hex").slice(0, 24);
+  return `kordexa-${learner}-${startDate || "unscheduled"}-day-${day}`;
+}
+
+export async function sendWithResend({ resend, message, idempotencyKey, wait = delay }) {
+  for (let attempt = 1; ; attempt += 1) {
+    let response;
+    try {
+      response = await fetch(RESEND_ENDPOINT, {
+        method: "POST",
+        signal: AbortSignal.timeout(RESEND_TIMEOUT_MS),
+        headers: {
+          authorization: `Bearer ${resend.apiKey}`,
+          "content-type": "application/json",
+          "user-agent": "kordexa-cli",
+          ...(idempotencyKey ? { "idempotency-key": idempotencyKey } : {})
+        },
+        body: JSON.stringify({ from: resend.from, to: [message.to], subject: message.subject, html: message.html, text: message.text })
+      });
+    } catch {
+      if (attempt < RESEND_MAX_ATTEMPTS) {
+        await wait(attempt * 1000);
+        continue;
+      }
+      throw new Error("Couldn't reach Resend. Check your internet connection and try again.");
+    }
+    if (response.ok) {
+      const { id } = await response.json();
+      return { sent: true, to: message.to, subject: message.subject, transport: "resend", id };
+    }
+    if ((response.status === 429 || response.status >= 500) && attempt < RESEND_MAX_ATTEMPTS) {
+      const retryAfter = Number(response.headers?.get?.("retry-after"));
+      await wait(Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : attempt * 1000);
+      continue;
+    }
+    throw new Error(await resendErrorMessage(response, message.to));
+  }
+}
+
+async function resendErrorMessage(response, to) {
+  const details = await response.json().catch(() => ({}));
+  const reason = String(details.message || "");
+  if (response.status === 401 || /api key/i.test(reason)) {
+    return "Resend didn't accept the API key. Create a new key at resend.com/api-keys and update RESEND_API_KEY in .env.local.";
+  }
+  if (response.status === 403 && /testing emails|verify a domain/i.test(reason)) {
+    return `Resend's free test sender can only email the address on your Resend account, so it can't send to ${to}. Use that address, or verify a domain in Resend.`;
+  }
+  if (response.status === 429) return "Resend's sending limit was reached. Please try again later.";
+  return `Resend couldn't send this email (error ${response.status}). ${reason}`.trim();
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function sendMail({ smtp, message, dryRun = false }) {
   if (dryRun) {
     return { dryRun: true, message };

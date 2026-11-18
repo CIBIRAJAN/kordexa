@@ -4,7 +4,7 @@ import path from "node:path";
 import { writeAgentAdapters } from "./adapters.js";
 import { appendGitignore, loadConfig, loadEnvFile, readJson, resolveDataDir, saveConfig, writeJson, writeLocalEnv, validateConfig, CONFIG_FILE } from "./config.js";
 import { createCoursePack, saveCoursePack } from "./courses.js";
-import { sendMail, smtpConfigFromEnv } from "./email.js";
+import { dailyEmailKey, resendConfigFromEnv, sendMail, sendWithResend, smtpConfigFromEnv } from "./email.js";
 import { createHarness, saveHarness } from "./harness.js";
 import { generate30DayPlan, renderDailyEmail } from "./planner.js";
 import { buildProgressionCard, copyDefaultTerminalCard, saveProgressionCard } from "./progression-card.js";
@@ -309,7 +309,10 @@ async function sendToday(argv) {
   const env = { ...process.env, ...loadEnvFile(path.join(process.cwd(), ".env.local")) };
   const smtp = smtpConfigFromEnv(env);
   const message = renderDailyEmail(config, plan, day, { progressReview, researchDigest: digest, progressionCard, coursePack });
-  const result = await sendMail({ smtp, message, dryRun });
+  const resend = resendConfigFromEnv(env);
+  const result = resend && !dryRun
+    ? await sendWithResend({ resend, message, idempotencyKey: dailyEmailKey(message.to, config.schedule?.startDate, day) })
+    : await sendMail({ smtp, message, dryRun });
   writeDataJson(config, "latest-email.json", { generatedAt: new Date().toISOString(), researchDigest: digestPath, ...result });
   outputJson(result);
 }
@@ -480,7 +483,7 @@ function doctor() {
 
   const scheduled = workflowStatus();
   const localSettings = { ...process.env, ...loadEnvFile(path.join(process.cwd(), ".env.local")) };
-  const missingEmailSettings = ["SMTP_HOST", "SMTP_USER", "SMTP_PASS"].filter((key) => !localSettings[key]);
+  const missingEmailSettings = localSettings.RESEND_API_KEY ? [] : ["SMTP_HOST", "SMTP_USER", "SMTP_PASS"].filter((key) => !localSettings[key]);
 
   const checks = {
     agentsMd: fs.existsSync(path.join(process.cwd(), "AGENTS.md")),
