@@ -1,0 +1,19 @@
+{
+  "name": "kordexa",
+  "command": "node .kordexa/mcp/server.js",
+  "tools": [
+    "kordexa_onboard",
+    "kordexa_harness",
+    "kordexa_courses",
+    "kordexa_plan30",
+    "kordexa_research",
+    "kordexa_links",
+    "kordexa_send_today",
+    "kordexa_log_progress",
+    "kordexa_progress_card",
+    "kordexa_terminal_card",
+    "kordexa_weekly_summary",
+    "kordexa_recommend_next",
+    "kordexa_status"
+  ]
+}

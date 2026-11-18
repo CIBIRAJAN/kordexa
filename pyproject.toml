@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kordexa"
+version = "0.4.4"
+description = "Universal AI agent skill and daily learning orchestrator for job-role learners."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "Kordexa Contributors" }
+]
+keywords = ["agents", "education", "learning", "orchestration", "skills", "kordexa"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://kordexa-learn.vercel.app"
+
+[project.scripts]
+kordexa = "kordexa.cli:main"
+
+[tool.setuptools.package-dir]
+"" = "python"
+

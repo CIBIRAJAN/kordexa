@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kordexa - Daily learning command center</title>
+  <meta name="description" content="Turn a target job role into a sourced 30-day-minimum plan, daily emails and one build artifact a day, inside the AI coding agent you already use.">
+  <meta name="theme-color" content="#f6f0e7">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Kordexa - Daily learning command center">
+  <meta property="og:description" content="One role, one daily build artifact, visible proof. Local-first and open source.">
+  <meta name="twitter:card" content="summary">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/theme-init.js"></script>
+  <script type="module" src="/assets/home.js"></script>
+</head>
+<body data-page="home">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Kordexa home">
+      <img src="/assets/favicon.svg" alt="" width="26" height="26">
+      <span>Kordexa<em>, your learning hub</em></span>
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="#configure">Configure</a>
+      <a href="#features">Features</a>
+      <a href="#roles">Roles</a>
+      <a href="/docs">Docs</a>
+    </nav>
+    <div class="header-actions">
+      <button class="search-button" type="button" data-palette-open aria-label="Search the site and commands">
+        <span>Search</span><kbd>⌘K</kbd>
+      </button>
+      <button class="theme-toggle" type="button" data-theme-toggle><span aria-hidden="true"></span></button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>Pick the job.<br>Prove the skill, <span class="accent">daily</span>.</h1>
+        <p>Kordexa turns a target role into one topic, one build artifact and one review a day, right inside your AI coding agent. Your data stays on your machine.</p>
+        <div class="button-row">
+          <a class="button button-primary" href="#configure">Build my plan</a>
+          <a class="button button-quiet" href="/docs#quickstart">Read the quickstart</a>
+        </div>
+      </div>
+      <div class="terminal-stack" data-terminal-stack aria-label="Example terminal output from the CLI">
+        <article class="term-card">
+          <header class="term-bar"><i></i><i></i><i></i><span>status</span></header>
+<pre><span class="prompt">$ npx kordexa terminal-card</span>
+<span class="k">role</span>="Agentic AI and LLM Engineer"
+<span class="k">skill</span>="evaluation"
+<span class="k">progress</span>="1/45 days"
+<span class="k">current_day</span>="2: Evaluation basics"
+<span class="k">next_action</span>="Create five test questions"
+<span class="k">momentum</span>=<span class="ok">"strong"</span></pre>
+        </article>
+        <article class="term-card">
+          <header class="term-bar"><i></i><i></i><i></i><span>log-progress</span></header>
+<pre><span class="prompt">$ npx kordexa log-progress --day 1 \
+    --completed "Set up repo" --minutes 90</span>
+<span class="k">status</span>     = <span class="ok">"logged"</span>
+<span class="k">activeDay</span>  = 2
+<span class="k">risk</span>       = "No active blocker logged."
+<span class="k">momentum</span>   = <span class="ok">"strong"</span>
+<span class="ok">✓ saved → data/progression-card.md</span></pre>
+        </article>
+        <article class="term-card">
+          <header class="term-bar"><i></i><i></i><i></i><span>plan</span></header>
+<pre><span class="prompt">$ npx kordexa plan --days 45</span>
+<span class="c"># 30-day minimum enforced</span>
+<span class="k">status</span> = <span class="ok">"saved"</span>
+<span class="k">days</span>   = 45
+<span class="k">day 8</span>  ▸ Embeddings
+<span class="k">build</span>  = "Create a tiny embedding search demo."
+<span class="ok">✓ saved → data/30-day-plan.json</span></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="band" aria-label="What you get">
+      <p class="eyebrow">The daily workflow</p>
+      <ul class="band-list">
+        <li>Adaptive plan</li>
+        <li>Sourced research</li>
+        <li>Daily email</li>
+        <li>Progress card</li>
+      </ul>
+      <blockquote>Job boards use AI to filter candidates. Kordexa gives the learner AI to build a daily, sourced path to the job.</blockquote>
+    </section>
+
+    <section class="section narrow" id="what" data-reveal>
+      <h2>What is <span class="accent">Kordexa?</span></h2>
+      <div class="describe-card">
+        <div class="describe-bar"><i></i><i></i><i></i><code>/kordexa --describe</code></div>
+        <p><strong>Kordexa</strong> is a local learning system that runs in the coding agent you already use. It captures your profile, target role and first skill, then writes an adaptive plan with a <mark>fixed 30-day minimum</mark>, installs adapters for your agents, and turns each day into <mark>one build artifact with visible proof</mark>. There is no account, no dashboard and no subscription.</p>      </div>
+    </section>
+
+    <section class="section tinted" id="flow" data-reveal>
+      <div class="section-head">
+        <h2>Turn any AI coding CLI into a learning command center.</h2>
+        <p class="script">Try it out</p>
+        <div class="copy-pill">
+          <code>npx kordexa</code>
+          <button type="button" data-copy="npx kordexa">Copy</button>
+        </div>
+      </div>
+      <div class="flow-shell">
+        <div class="flow-terminal">
+          <div class="describe-bar"><i></i><i></i><i></i><code>~/learning/agentic-ai</code></div>
+<pre><span class="prompt">$</span> npx kordexa
+<span class="prompt">$</span> npx kordexa plan --role "Agentic AI and LLM Engineer" --skill "evaluation"
+<span class="prompt">$</span> npx kordexa research --day 1
+<span class="prompt">$</span> npx kordexa links --day 1
+<span class="prompt">$</span> npx kordexa send-today --dry-run
+<span class="prompt">$</span> npx kordexa log-progress --day 1 --completed "Built setup" --evidence "Repo link"
+<span class="prompt">$</span> npx kordexa progress-card</pre>
+        </div>
+      </div>
+    </section>
+
+    <section class="section configurator" id="configure">
+      <div class="section-head">
+        <p class="eyebrow">Plan configurator</p>
+        <h2>Shape your plan <span class="accent">before you install.</span></h2>
+        <p>Every choice maps to a real CLI option. The preview uses the same blueprints as the CLI, and nothing you type leaves this page.</p>
+      </div>
+
+      <div class="config-grid">
+        <form id="plan-form" class="config-form" autocomplete="off" novalidate>
+          <fieldset class="presets">
+            <legend>Start from a pace</legend>
+            <div>
+              <button type="button" class="chip-button" data-preset="sprint" aria-pressed="false">30-day sprint</button>
+              <button type="button" class="chip-button" data-preset="steady" aria-pressed="false">45-day steady</button>
+              <button type="button" class="chip-button" data-preset="deep" aria-pressed="false">90-day deep</button>
+            </div>
+          </fieldset>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="roleChoice">Target role</label>
+              <select id="roleChoice" name="roleChoice">
+                <option value="agentic">Agentic AI and LLM Engineer</option>
+                <option value="fullstack">Full-Stack Developer</option>
+                <option value="security">Cybersecurity Analyst</option>
+                <option value="data">Data Scientist</option>
+                <option value="custom">Another role</option>
+              </select>
+            </div>
+            <div class="field" hidden>
+              <label for="customRole">Your role</label>
+              <input id="customRole" name="customRole" maxlength="80" placeholder="Backend Engineer">
+            </div>
+            <div class="field">
+              <label for="focusSkill">First skill to focus on</label>
+              <input id="focusSkill" name="focusSkill" maxlength="80" value="evaluation">
+            </div>
+            <div class="field">
+              <label for="currentLearning">Learning right now</label>
+              <input id="currentLearning" name="currentLearning" maxlength="80" placeholder="Python basics">
+            </div>
+            <div class="field">
+              <label for="stage">Current stage</label>
+              <select id="stage" name="stage">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate" selected>Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="label-row"><label for="planDays">Plan length</label><output id="days-value" for="planDays">45 days</output></div>
+            <input id="planDays" name="planDays" type="range" min="30" max="120" step="5" value="45">
+            <small>Plans never go below 30 days. Days past 30 become a next-skill ramp.</small>
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              <label for="weeklyHours">Hours per week</label>
+              <input id="weeklyHours" name="weeklyHours" type="number" min="1" max="60" value="12" inputmode="numeric">
+            </div>
+            <div class="field">
+              <label for="time">Daily email time</label>
+              <input id="time" name="time" type="time" value="08:00">
+            </div>
+            <div class="field">
+              <label for="timezone">Timezone</label>
+              <select id="timezone" name="timezone"></select>
+            </div>
+            <div class="field">
+              <label for="smtp">Email provider</label>
+              <select id="smtp" name="smtp">
+                <option value="gmail">Gmail</option>
+                <option value="outlook">Outlook / Microsoft 365</option>
+                <option value="fastmail">Fastmail</option>
+                <option value="postmark">Postmark</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="name">Your name</label>
+              <input id="name" name="name" maxlength="60" placeholder="Learner">
+            </div>
+            <div class="field">
+              <label for="email">Email for daily plans</label>
+              <input id="email" name="email" type="email" maxlength="120" placeholder="you@example.com" aria-describedby="email-error">
+              <small id="email-error" class="field-error" hidden>Enter a complete email address.</small>
+            </div>
+          </div>
+
+          <label class="check"><input type="checkbox" name="offline"> <span>Skip live link lookups during setup (<code>--offline</code>)</span></label>
+        </form>
+
+        <div class="config-output">
+          <div class="output-card">
+            <div class="tabs" role="tablist" aria-label="Generated setup files">
+              <button type="button" role="tab" id="tab-command" data-output="command" aria-controls="output-panel">Command</button>
+              <button type="button" role="tab" id="tab-config" data-output="config" aria-controls="output-panel">Config</button>
+              <button type="button" role="tab" id="tab-env" data-output="env" aria-controls="output-panel">.env.local</button>
+              <button type="button" role="tab" id="tab-workflow" data-output="workflow" aria-controls="output-panel">Schedule</button>
+            </div>
+            <div id="output-panel" role="tabpanel" tabindex="0"><pre><code id="output-code"></code></pre></div>
+            <div class="output-actions">
+              <button type="button" class="button button-primary button-small" id="output-copy">Copy</button>
+              <button type="button" class="button button-quiet button-small" id="output-download">Download</button>
+            </div>
+          </div>
+          <ul id="insights" class="insights" aria-live="polite"></ul>
+        </div>
+      </div>
+
+      <div class="plan-preview">
+        <div class="plan-head">
+          <div>
+            <p class="eyebrow">Your plan preview</p>
+            <h3 id="plan-title"></h3>
+            <p id="plan-capstone" class="muted"></p>
+          </div>
+        </div>
+        <div id="phase-bar" class="phase-bar" aria-hidden="true"></div>
+        <ul id="phase-legend" class="phase-legend"></ul>
+        <div class="plan-body">
+          <div id="day-grid" class="day-grid" aria-label="Plan days. Choose a day to see details."></div>
+          <article class="day-detail" aria-live="polite">
+            <p class="eyebrow" id="day-kicker"></p>
+            <h4 id="day-title"></h4>
+            <p id="day-task"></p>
+            <ul id="day-concepts" class="tags"></ul>
+            <dl>
+              <div><dt>Timebox</dt><dd id="day-time"></dd></div>
+              <div><dt>Portfolio</dt><dd id="day-artifact"></dd></div>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features" data-reveal>
+      <div class="section-head">
+        <h2>Built for the <span class="accent">daily loop.</span></h2>
+        <p>Plan, research, ship, prove. Each card is a command you can run today.</p>
+      </div>
+      <div class="bento">
+        <article class="bento-card bento-wide bento-warm">
+          <p class="card-kicker"><b>00</b> Integrations</p>
+          <h3>One skill, every agent.</h3>
+          <p>Setup writes the right adapter for each runtime, so the same daily workflow follows you between tools.</p>
+          <ul class="tags tags-large">
+            <li>Claude Code</li><li>Codex</li><li>Gemini</li><li>OpenClaw</li><li>Antigravity</li><li>Hermas</li><li>MCP</li>
+          </ul>
+        </article>
+        <article class="bento-card">
+          <p class="card-kicker"><b>01</b> Build</p>
+          <h3>One artifact a day.</h3>
+          <p>Each day names one practical task, the proof it should leave behind, review questions and a bridge to tomorrow.</p>
+          <ul class="file-list">
+            <li><code>eval/golden_set.json</code><span class="ok">✓</span></li>
+            <li><code>notes/day-08.md</code><span class="ok">✓</span></li>
+            <li><code>shots/demo.png</code><span>·</span></li>
+          </ul>
+        </article>
+        <article class="bento-card">
+          <p class="card-kicker"><b>02</b> Deliver</p>
+          <h3>The right day, on schedule.</h3>
+          <p>A generated GitHub Actions workflow works out the current day from your start date and stops when the plan ends.</p>
+          <ul class="file-list">
+            <li><code>cron 0 2 * * *</code><span>UTC</span></li>
+            <li><code>day 12 → inbox</code><span class="ok">sent</span></li>
+            <li><code>day 46</code><span>plan-complete</span></li>
+          </ul>
+        </article>
+        <article class="bento-card bento-wide bento-split">
+          <div>
+            <p class="card-kicker"><b>03</b> Prove</p>
+            <h3>Progress you can show.</h3>
+            <p>Log evidence for each day, then render your role, skill, active day, next action and momentum as a terminal card.</p>
+          </div>
+<pre class="mini-term"><span class="prompt">$ npx kordexa status</span>
+<span class="k">activeDay</span>  = 2
+<span class="k">nextAction</span> = "Create five test questions"
+<span class="k">momentum</span>   = <span class="ok">"strong"</span></pre>
+        </article>
+      </div>
+    </section>
+
+    <section class="section narrow-wide" id="stats" data-reveal>
+      <div class="section-head">
+        <h2><span class="accent">100%</span> open source.</h2>
+        <p>State stays in <code>data/</code>. SMTP secrets stay in <code>.env.local</code> or GitHub Actions secrets. Nothing phones home.</p>
+      </div>
+      <dl class="stat-grid">
+        <div><dt>30+</dt><dd>day minimum per plan</dd></div>
+        <div><dt>120</dt><dd>topics across 4 role blueprints</dd></div>
+        <div><dt>7</dt><dd>agent adapter targets</dd></div>
+        <div><dt>0</dt><dd>runtime dependencies</dd></div>
+      </dl>
+    </section>
+
+    <section class="section" id="updates" data-reveal>
+      <div class="section-head">
+        <p class="status-pill">Now on npm</p>
+        <h2>Safer setup, <span class="accent">ready to use.</span></h2>
+        <p>These improvements are available now in the <code>kordexa</code> package on npm.</p>
+      </div>
+      <div class="update-grid">
+        <article class="update-card">
+          <h3>Your files stay yours</h3>
+          <p>Setup adds its own section to <code>AGENTS.md</code> and <code>GEMINI.md</code> without replacing your instructions.</p>
+        </article>
+        <article class="update-card">
+          <h3>Settings are kept</h3>
+          <p>Running setup again keeps your email login, profile, progress and plan start date.</p>
+        </article>
+        <article class="update-card">
+          <h3>One daily email</h3>
+          <p>Setup creates one scheduled workflow, so the same plan isn't sent twice.</p>
+        </article>
+        <article class="update-card">
+          <h3>Custom workflows are safe</h3>
+          <p>Workflows you've edited stay in place, with a warning if they could send duplicate email.</p>
+        </article>
+        <article class="update-card">
+          <h3>Follows your real progress</h3>
+          <p>Your AI agent continues from the earliest day you haven't finished.</p>
+        </article>
+        <article class="update-card">
+          <h3>Clearer health checks</h3>
+          <p><code>doctor</code> tells you exactly what's missing and how to fix it.</p>
+        </article>
+      </div>
+      <p class="update-link"><a href="/docs#release-notes">Read the release notes</a></p>
+    </section>
+
+    <section class="section" id="roles" data-reveal>
+      <div class="section-head">
+        <h2>What can it <span class="accent">plan?</span></h2>
+        <p>Pick a role to load it into the configurator. Any other role maps to the closest blueprint.</p>
+      </div>
+      <div class="role-grid">
+        <button type="button" class="role-card" data-role-pick="agentic">
+          <span class="role-num">01</span>
+          <strong>Agentic AI and LLM Engineer</strong>
+          <span>RAG, evaluation, agent workflows and a deployed capstone assistant.</span>
+          <span class="role-action">Use this role →</span>
+        </button>
+        <button type="button" class="role-card" data-role-pick="fullstack">
+          <span class="role-num">02</span>
+          <strong>Full-Stack Developer</strong>
+          <span>Frontend, APIs, auth, testing and an authenticated dashboard you can ship.</span>
+          <span class="role-action">Use this role →</span>
+        </button>
+        <button type="button" class="role-card" data-role-pick="security">
+          <span class="role-num">03</span>
+          <strong>Cybersecurity Analyst</strong>
+          <span>Logs, SIEM thinking, MITRE ATT&amp;CK and a home SOC investigation report.</span>
+          <span class="role-action">Use this role →</span>
+        </button>
+        <button type="button" class="role-card" data-role-pick="data">
+          <span class="role-num">04</span>
+          <strong>Data Scientist</strong>
+          <span>pandas, SQL, modeling and an end-to-end analysis with a stakeholder summary.</span>
+          <span class="role-action">Use this role →</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="section tinted" id="compare" data-reveal>
+      <div class="section-head">
+        <h2>Comparing tools?</h2>
+        <p>Other tools each do something well. Kordexa focuses on the full daily loop where you already code.</p>
+      </div>
+      <div id="compare-picker" class="compare-picker" aria-label="Choose a tool category to compare"></div>
+      <div class="compare-grid">
+        <article class="compare-card compare-featured">
+          <h3>Kordexa</h3>
+          <p class="muted">Local learning command loop</p>
+          <ul class="mark-list">
+            <li class="mark mark-yes"><span class="mark-dot">Yes</span><span>Runs inside your coding agent</span></li>
+            <li class="mark mark-yes"><span class="mark-dot">Yes</span><span>One daily build artifact with proof</span></li>
+            <li class="mark mark-yes"><span class="mark-dot">Yes</span><span>Sourced, dated research digests</span></li>
+            <li class="mark mark-yes"><span class="mark-dot">Yes</span><span>Scheduled email delivery</span></li>
+            <li class="mark mark-yes"><span class="mark-dot">Yes</span><span>Local-first data</span></li>
+            <li class="mark mark-yes"><span class="mark-dot">Yes</span><span>Free and open source</span></li>
+          </ul>
+          <p class="best"><span>Best at</span> Daily, sourced, in-repo proof</p>
+        </article>
+        <article class="compare-card">
+          <h3 id="compare-name"></h3>
+          <p class="muted" id="compare-note"></p>
+          <ul class="mark-list" id="compare-list"></ul>
+          <p class="best"><span>Best at</span> <b id="compare-best"></b></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section narrow" id="faq" data-reveal>
+      <h2>Frequently asked</h2>
+      <div class="faq-list">
+        <details open>
+          <summary>How is the daily plan chosen?</summary>
+          <p>It starts from your target role, first skill and requested length. Topics matching your skill move to the front, and plans never go below 30 days.</p>
+        </details>
+        <details>
+          <summary>Does it send email without asking every day?</summary>
+          <p>Only after you set it up. <code>send-today --dry-run</code> is a safe preview, and scheduled sends use the GitHub Actions workflow with your own SMTP secrets.</p>
+        </details>
+        <details>
+          <summary>Does a browser or agent need to stay open?</summary>
+          <p>No. The scheduled workflow runs on GitHub Actions, so the email can go out with your laptop shut.</p>
+        </details>
+        <details>
+          <summary>Where does my data go?</summary>
+          <p>Plans, digests, logs and cards are written to <code>data/</code> in your project, which is git-ignored. The configurator on this page runs entirely in your browser.</p>
+        </details>
+        <details>
+          <summary>Which agents does it support?</summary>
+          <p>Claude Code, Codex and other <code>AGENTS.md</code> agents, Gemini, OpenClaw, Antigravity, Hermas and MCP-capable clients.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="section" data-reveal>
+      <div class="cta">
+        <code>$ npx kordexa</code>
+        <h2>Ready to learn the job,<br>not just <span class="accent">read</span> about it?</h2>
+        <div class="button-row">
+          <a class="button button-primary" href="#configure">Configure my plan</a>
+          <a class="button button-quiet" href="/docs">Read the docs</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <a class="brand" href="/"><img src="/assets/favicon.svg" alt="" width="26" height="26"><span>Kordexa</span></a>
+      <p>Built for learners who want proof, not passive curriculum.</p>
+    </div>
+    <nav aria-label="Explore">
+      <h2>Explore</h2>
+      <a href="#configure">Configure</a>
+      <a href="#flow">Daily flow</a>
+      <a href="#features">Features</a>
+      <a href="#updates">What's new</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <nav aria-label="Project">
+      <h2>Project</h2>
+      <a href="/docs">Docs</a>
+      <a href="https://github.com/haroontrailblazer/EduOrchestrate" rel="noopener">EduOrchestrate source</a>
+      <a href="https://www.npmjs.com/package/kordexa" rel="noopener">npm package</a>
+    </nav>
+    <p class="footer-credit">MIT licensed. Based on EduOrchestrate, © 2026 Haroon K M.</p>
+  </footer>
+
+  <dialog class="palette" data-palette aria-label="Search">
+    <input type="search" placeholder="Search sections and commands" aria-label="Search sections and commands" role="combobox" aria-expanded="true" aria-controls="palette-list">
+    <ul id="palette-list" role="listbox"></ul>
+  </dialog>
+</body>
+</html>

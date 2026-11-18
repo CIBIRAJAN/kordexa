@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kordexa Docs</title>
+  <meta name="description" content="Set up Kordexa, run the daily learning loop, and find every CLI command, adapter, schedule and data file.">
+  <meta name="theme-color" content="#f6f0e7">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/styles.css">
+  <script src="/assets/theme-init.js"></script>
+  <script type="module" src="/assets/common.js"></script>
+</head>
+<body data-page="docs">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="Kordexa home">
+      <img src="/assets/favicon.svg" alt="" width="26" height="26">
+      <span>Kordexa<em>, docs</em></span>
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="/#configure">Configure</a>
+      <a href="/#features">Features</a>
+      <a href="/#roles">Roles</a>
+      <a href="/docs" aria-current="page">Docs</a>
+    </nav>
+    <div class="header-actions">
+      <button class="search-button" type="button" data-palette-open aria-label="Search the site and commands">
+        <span>Search</span><kbd>⌘K</kbd>
+      </button>
+      <button class="theme-toggle" type="button" data-theme-toggle><span aria-hidden="true"></span></button>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav class="docs-nav" aria-label="Documentation">
+      <h2>Getting started</h2>
+      <a href="#overview">Overview</a>
+      <a href="#quickstart">Quickstart</a>
+      <h2>Concepts</h2>
+      <a href="#loop">Daily workflow</a>
+      <a href="#roles">Role blueprints</a>
+      <h2>Reference</h2>
+      <a href="#cli">CLI reference</a>
+      <a href="#agents">Agent integrations</a>
+      <a href="#email">Email and scheduling</a>
+      <a href="#data">Data and state</a>
+      <h2>Support</h2>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <a href="#release-notes">Release notes</a>
+    </nav>
+
+    <main id="main" class="docs-main">
+      <section id="overview">
+        <p class="eyebrow">Documentation</p>
+        <h1>Kordexa docs</h1>
+        <p class="lede">Kordexa turns a target job role into a daily learning loop inside the AI coding agent you already use. Each day is one topic, one build artifact and one review.</p>
+        <ul class="tags"><li>MIT</li><li>Node 18+</li><li>0 runtime dependencies</li><li>7 agent targets</li></ul>
+      </section>
+
+      <section id="quickstart">
+        <h2>Quickstart</h2>
+        <p>Run the guided setup from a terminal in your project:</p>
+        <div class="code-block"><button type="button" data-copy="npx kordexa">Copy</button><pre><code>npx kordexa</code></pre></div>
+        <p>For a scripted setup, pass your answers as flags. The <a href="/#configure">plan configurator</a> can write this command for you.</p>
+        <div class="code-block"><button type="button" data-copy='npx kordexa --yes --name "Ada" --email "ada@example.com" --role "Agentic AI and LLM Engineer" --skill "evaluation" --days 45'>Copy</button><pre><code>npx kordexa --yes --name "Ada" --email "ada@example.com" \
+  --role "Agentic AI and LLM Engineer" --skill "evaluation" --days 45</code></pre></div>
+        <p>Then preview your first daily email. A dry run never sends anything.</p>
+        <div class="code-block"><button type="button" data-copy="npx kordexa send-today --dry-run">Copy</button><pre><code>npx kordexa send-today --dry-run</code></pre></div>
+        <h3>What setup writes</h3>
+        <ul>
+          <li><code>kordexa.config.json</code> with your profile and schedule</li>
+          <li>Adapter files for each supported agent</li>
+          <li><code>data/30-day-plan.json</code>, the harness, learning sources and first research digest</li>
+          <li><code>.github/workflows/kordexa-daily.yml</code> for scheduled delivery</li>
+          <li><code>.env.local</code> with SMTP settings, plus <code>.gitignore</code> entries</li>
+        </ul>
+      </section>
+
+      <section id="loop">
+        <h2>Daily workflow</h2>
+        <p>A typical day runs from loading context to logging proof:</p>
+        <div class="code-block"><pre><code>npx kordexa harness
+npx kordexa status
+npx kordexa research --day 8
+npx kordexa send-today --dry-run
+npx kordexa log-progress --day 8 --completed "Built search demo" \
+  --evidence "github.com/me/search-demo" --minutes 90 --confidence 4
+npx kordexa progress-card</code></pre></div>
+        <ol>
+          <li><strong>Load the harness.</strong> It tells the agent what to load and what to keep out of chat.</li>
+          <li><strong>Check status.</strong> See the active day, next action and momentum.</li>
+          <li><strong>Research.</strong> Write a dated digest with docs, a top video and a top repo.</li>
+          <li><strong>Build.</strong> Complete the day's single artifact.</li>
+          <li><strong>Log evidence.</strong> Record what you finished, with a link to the proof.</li>
+          <li><strong>Render progress.</strong> Update your progression card.</li>
+        </ol>
+        <h3>Plan phases</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Days</th><th scope="col">Phase</th><th scope="col">Daily time</th></tr></thead>
+          <tbody>
+            <tr><td>1-7</td><td>Setup and first-skill foundations</td><td>95 minutes</td></tr>
+            <tr><td>8-15</td><td>Applied practice and trend adaptation</td><td>110 minutes</td></tr>
+            <tr><td>16-24</td><td>Portfolio build</td><td>110 minutes</td></tr>
+            <tr><td>25-30</td><td>Release and interview proof</td><td>110 minutes</td></tr>
+            <tr><td>31+</td><td>Next-skill ramp and trend refresh</td><td>110 minutes</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="roles">
+        <h2>Role blueprints</h2>
+        <p>Four blueprints ship with 30 topics each. Other roles use the closest match by keyword, and default to Agentic AI when nothing matches.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Blueprint</th><th scope="col">Capstone</th></tr></thead>
+          <tbody>
+            <tr><td>Agentic AI and LLM Engineer</td><td>Agentic RAG assistant with evaluation and deployment notes</td></tr>
+            <tr><td>Full-Stack Developer</td><td>Authenticated full-stack dashboard deployed with tests</td></tr>
+            <tr><td>Cybersecurity Analyst</td><td>Home SOC investigation report with detections and response notes</td></tr>
+            <tr><td>Data Scientist</td><td>End-to-end analysis notebook with model, metrics and stakeholder summary</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="cli">
+        <h2>CLI reference</h2>
+        <p>Run each command as <code>npx kordexa &lt;command&gt;</code>. With no command, it starts setup.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Command</th><th scope="col">What it does</th><th scope="col">Key flags</th></tr></thead>
+          <tbody>
+            <tr><td><code>init</code></td><td>Runs setup</td><td><code>--yes</code> <code>--name</code> <code>--email</code> <code>--role</code> <code>--skill</code> <code>--stage</code> <code>--weekly-hours</code> <code>--days</code> <code>--time</code> <code>--timezone</code> <code>--smtp-*</code> <code>--offline</code></td></tr>
+            <tr><td><code>plan</code></td><td>Regenerates the plan</td><td><code>--role</code> <code>--skill</code> <code>--current-learning</code> <code>--days</code></td></tr>
+            <tr><td><code>status</code></td><td>Shows the active day and next action</td><td>None</td></tr>
+            <tr><td><code>harness</code></td><td>Writes the agent execution harness</td><td><code>--mode</code></td></tr>
+            <tr><td><code>courses</code></td><td>Writes role-specific learning sources</td><td>None</td></tr>
+            <tr><td><code>research</code></td><td>Writes a dated research digest</td><td><code>--day</code> <code>--topic</code> <code>--offline</code></td></tr>
+            <tr><td><code>links</code></td><td>Resolves the top video, repo and doc</td><td><code>--day</code> <code>--topic</code> <code>--offline</code></td></tr>
+            <tr><td><code>send-today</code></td><td>Sends or previews the day's email</td><td><code>--dry-run</code> <code>--day</code> <code>--offline</code></td></tr>
+            <tr><td><code>log-progress</code></td><td>Records evidence and refreshes cards</td><td><code>--day</code> <code>--completed</code> <code>--evidence</code> <code>--minutes</code> <code>--confidence</code> <code>--blocker</code></td></tr>
+            <tr><td><code>weekly-summary</code></td><td>Summarizes a week of progress</td><td><code>--week</code></td></tr>
+            <tr><td><code>recommend-next</code></td><td>Suggests the next skill</td><td>None</td></tr>
+            <tr><td><code>progress-card</code></td><td>Writes the progression card</td><td>None</td></tr>
+            <tr><td><code>terminal-card</code></td><td>Writes the terminal SVG card</td><td>None</td></tr>
+            <tr><td><code>setup-secrets</code></td><td>Prints GitHub secret commands</td><td>None</td></tr>
+            <tr><td><code>doctor</code></td><td>Checks skill, adapter and config files</td><td>None</td></tr>
+          </tbody>
+        </table></div>
+        <aside class="callout callout-warn"><strong>Real email.</strong> <code>send-today</code> without <code>--dry-run</code> sends through your SMTP provider.</aside>
+      </section>
+
+      <section id="agents">
+        <h2>Agent integrations</h2>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Runtime</th><th scope="col">Adapter file</th></tr></thead>
+          <tbody>
+            <tr><td>Claude Code</td><td><code>.claude/skills/kordexa/SKILL.md</code></td></tr>
+            <tr><td>Codex and generic agents</td><td><code>AGENTS.md</code></td></tr>
+            <tr><td>Gemini</td><td><code>GEMINI.md</code></td></tr>
+            <tr><td>OpenClaw</td><td><code>.kordexa/adapters/openclaw/SKILL.md</code></td></tr>
+            <tr><td>Antigravity</td><td><code>.kordexa/adapters/antigravity/manifest.json</code></td></tr>
+            <tr><td>Hermas</td><td><code>.kordexa/adapters/hermas/manifest.json</code></td></tr>
+            <tr><td>MCP clients</td><td><code>.kordexa/mcp/manifest.json</code></td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="email">
+        <h2>Email and scheduling</h2>
+        <p>Setup writes a GitHub Actions workflow that sends the day's email at your chosen time. It calculates the day from <code>schedule.startDate</code> and skips sending with <code>plan-complete</code> once the plan ends.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Variable</th><th scope="col">Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>SMTP_HOST</code></td><td>SMTP server hostname</td></tr>
+            <tr><td><code>SMTP_PORT</code></td><td>465 for implicit TLS, 587 for STARTTLS</td></tr>
+            <tr><td><code>SMTP_USER</code></td><td>SMTP username</td></tr>
+            <tr><td><code>SMTP_PASS</code></td><td>SMTP password or app password</td></tr>
+            <tr><td><code>SMTP_FROM</code></td><td>From address for daily emails</td></tr>
+          </tbody>
+        </table></div>
+        <p>Keep these in <code>.env.local</code> for local sends. For scheduled sends, print the GitHub secret commands with:</p>
+        <div class="code-block"><button type="button" data-copy="npx kordexa setup-secrets">Copy</button><pre><code>npx kordexa setup-secrets</code></pre></div>
+      </section>
+
+      <section id="data">
+        <h2>Data and state</h2>
+        <p>Learning state is written to <code>data/</code>, which setup adds to <code>.gitignore</code>.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">File</th><th scope="col">Contents</th></tr></thead>
+          <tbody>
+            <tr><td><code>30-day-plan.json</code></td><td>The full plan, whatever its length</td></tr>
+            <tr><td><code>research-digests/*.json</code></td><td>Dated research for each plan day</td></tr>
+            <tr><td><code>links.json</code></td><td>Latest resolved video, repo and doc links</td></tr>
+            <tr><td><code>progress-log.json</code></td><td>Completed work, evidence, minutes and blockers</td></tr>
+            <tr><td><code>progression-card.md</code></td><td>Your skill progression card</td></tr>
+            <tr><td><code>terminal-card.svg</code></td><td>Terminal-style progress card</td></tr>
+            <tr><td><code>weekly-summary-*.json</code></td><td>Weekly progress summaries</td></tr>
+            <tr><td><code>latest-email.json</code></td><td>Result of the last send or preview</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+        <p>Start with the built-in check:</p>
+        <div class="code-block"><button type="button" data-copy="npx kordexa doctor">Copy</button><pre><code>npx kordexa doctor</code></pre></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Symptom</th><th scope="col">Fix</th></tr></thead>
+          <tbody>
+            <tr><td>Scheduled email never arrives</td><td>Run <code>setup-secrets</code>, set all five <code>SMTP_*</code> secrets, and confirm the workflow is enabled.</td></tr>
+            <tr><td><code>send-today</code> skips with <code>plan-complete</code></td><td>The plan has ended. Run <code>recommend-next</code>, then <code>plan</code> with a new <code>--skill</code>.</td></tr>
+            <tr><td>A shorter plan came back with 30 days</td><td>This is expected. The 30-day minimum is fixed.</td></tr>
+            <tr><td>Links show searches instead of results</td><td>The lookup ran offline or was rate limited. Run it again online.</td></tr>
+            <tr><td>Email works locally but not in Actions</td><td>Actions can't read <code>.env.local</code>. Add the values as GitHub secrets.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section id="release-notes">
+        <h2>Release notes</h2>
+        <h3>Phase 1: launch-ready setup</h3>
+        <aside class="callout"><strong>Available now.</strong> Phase 1 is included in <code>kordexa</code> 0.4.2 on npm.</aside>
+        <div class="table-wrap"><table>
+          <thead><tr><th scope="col">Area</th><th scope="col">What changes</th></tr></thead>
+          <tbody>
+            <tr><td>Package name</td><td>Kordexa installs and runs as <code>npx kordexa</code>. The <code>/eduorchestrate</code> commands inside AI agents stay available.</td></tr>
+            <tr><td>Instruction files</td><td>Setup keeps your content in <code>AGENTS.md</code> and <code>GEMINI.md</code> and updates only its marked section.</td></tr>
+            <tr><td>Running setup again</td><td>Your email login, API keys, profile, progress and start date are kept.</td></tr>
+            <tr><td>Restarting a plan</td><td><code>npx kordexa --yes --restart</code> starts the plan again from today.</td></tr>
+            <tr><td>Scheduled email</td><td>Setup creates one workflow that works in learner projects, so the daily email is sent once.</td></tr>
+            <tr><td>Custom workflows</td><td>Workflows you've edited are never replaced, and Kordexa warns you if one could send duplicate email.</td></tr>
+            <tr><td>Settings file</td><td><code>kordexa.config.json</code> is the main settings file. Older projects with only <code>eduorchestrate.config.json</code> still load.</td></tr>
+            <tr><td>Current day</td><td>Status and the AI agent continue from the earliest unfinished day.</td></tr>
+            <tr><td>Health check</td><td><code>doctor</code> reports <code>ready</code>, <code>needs-setup</code>, <code>needs-upgrade</code> or <code>needs-email-setup</code>, with the next step to take.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="palette" data-palette aria-label="Search">
+    <input type="search" placeholder="Search sections and commands" aria-label="Search sections and commands" role="combobox" aria-expanded="true" aria-controls="palette-list">
+    <ul id="palette-list" role="listbox"></ul>
+  </dialog>
+</body>
+</html>
