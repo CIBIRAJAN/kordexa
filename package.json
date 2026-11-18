@@ -1,0 +1,48 @@
+{
+  "name": "@kordexa/core",
+  "version": "0.4.2",
+  "description": "Universal AI agent skill and daily learning orchestrator for job-role learners.",
+  "type": "module",
+  "bin": {
+    "kordexa": "bin/kordexa.js",
+    "eduorchestrate": "bin/eduorchestrate.js"
+  },
+  "scripts": {
+    "start": "node bin/kordexa.js",
+    "test": "node --test tests/node/*.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    ".claude/",
+    ".kordexa/",
+    ".eduorchestrate/",
+    "AGENTS.md",
+    "GEMINI.md",
+    "README.md",
+    "agents/",
+    "bin/",
+    "skills/",
+    "src/",
+    "tests/node/"
+  ],
+  "keywords": [
+    "agents",
+    "education",
+    "learning",
+    "orchestration",
+    "skills",
+    "kordexa"
+  ],
+  "author": "Kordexa Contributors",
+  "homepage": "https://kordexa.dev/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kordexa/kordexa.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kordexa/kordexa/issues"
+  },
+  "license": "MIT"
+}

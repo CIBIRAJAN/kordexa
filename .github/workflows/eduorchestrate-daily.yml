@@ -1,0 +1,25 @@
+name: Kordexa Daily Plan
+
+on:
+  schedule:
+    # GitHub Actions cron is UTC. Generated from 08:00 UTC.
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  send-daily-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install --no-package-lock
+      - name: Send today's Kordexa email
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+        run: node bin/kordexa.js send-today || node bin/eduorchestrate.js send-today
