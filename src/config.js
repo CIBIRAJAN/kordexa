@@ -49,19 +49,12 @@ export function validateConfig(config) {
 }
 
 export function loadConfig(rootDir = process.cwd()) {
+  // File times are not reliable after a git checkout, so the primary file
+  // always wins and the legacy file is only used when it is the sole config.
   const primaryPath = path.join(rootDir, CONFIG_FILE);
   const legacyPath = path.join(rootDir, LEGACY_CONFIG_FILE);
-  let configPath = null;
-  if (fs.existsSync(primaryPath) && fs.existsSync(legacyPath)) {
-    const primaryMtime = fs.statSync(primaryPath).mtimeMs;
-    const legacyMtime = fs.statSync(legacyPath).mtimeMs;
-    configPath = legacyMtime > primaryMtime ? legacyPath : primaryPath;
-  } else if (fs.existsSync(primaryPath)) {
-    configPath = primaryPath;
-  } else if (fs.existsSync(legacyPath)) {
-    configPath = legacyPath;
-  }
-  const config = configPath ? readJson(configPath) : null;
+  const configPath = fs.existsSync(primaryPath) ? primaryPath : legacyPath;
+  const config = fs.existsSync(configPath) ? readJson(configPath) : null;
   if (!config) {
     throw new Error(`No ${CONFIG_FILE} found. Run npx kordexa first.`);
   }
@@ -70,7 +63,6 @@ export function loadConfig(rootDir = process.cwd()) {
 
 export function saveConfig(config, rootDir = process.cwd()) {
   writeJson(path.join(rootDir, CONFIG_FILE), config);
-  writeJson(path.join(rootDir, LEGACY_CONFIG_FILE), config);
 }
 
 export function appendGitignore(entries, rootDir = process.cwd()) {
@@ -89,11 +81,25 @@ export function appendGitignore(entries, rootDir = process.cwd()) {
   }
 }
 
+// Updates only the provided keys, so saved passwords, API keys and comments stay.
 export function writeLocalEnv(values, rootDir = process.cwd()) {
-  const lines = Object.entries(values)
-    .filter(([, value]) => value !== undefined && value !== "")
-    .map(([key, value]) => `${key}=${String(value).replace(/\n/g, "\\n")}`);
-  fs.writeFileSync(path.join(rootDir, LOCAL_ENV_FILE), `${lines.join("\n")}\n`, "utf8");
+  const envPath = path.join(rootDir, LOCAL_ENV_FILE);
+  const updates = new Map(
+    Object.entries(values)
+      .filter(([, value]) => value !== undefined && value !== "")
+      .map(([key, value]) => [key, String(value).replace(/\n/g, "\\n")])
+  );
+  const existing = fs.existsSync(envPath) ? fs.readFileSync(envPath, "utf8").split(/\r?\n/) : [];
+  const lines = existing.map((line) => {
+    const key = line.trim().startsWith("#") || !line.includes("=") ? null : line.split("=")[0].trim();
+    if (!key || !updates.has(key)) return line;
+    const value = updates.get(key);
+    updates.delete(key);
+    return `${key}=${value}`;
+  });
+  while (lines.at(-1) === "") lines.pop();
+  for (const [key, value] of updates) lines.push(`${key}=${value}`);
+  fs.writeFileSync(envPath, `${lines.join("\n")}\n`, "utf8");
 }
 
 export function loadEnvFile(filePath) {

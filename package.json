@@ -4,8 +4,7 @@
   "description": "Universal AI agent skill and daily learning orchestrator for job-role learners.",
   "type": "module",
   "bin": {
-    "kordexa": "bin/kordexa.js",
-    "eduorchestrate": "bin/eduorchestrate.js"
+    "kordexa": "bin/kordexa.js"
   },
   "scripts": {
     "start": "node bin/kordexa.js",

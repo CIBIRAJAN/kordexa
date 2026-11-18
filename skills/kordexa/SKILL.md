@@ -7,7 +7,7 @@ description: Universal /kordexa agent skill for job-role learners. Use when an a
 
 Visible command: `/kordexa`.
 
-If the host agent cannot register slash commands, treat `kordexa` or `use Kordexa` (or legacy `kordexa`) as equivalent to `/kordexa`.
+If the host agent cannot register slash commands, treat `kordexa` or `use Kordexa` (or legacy `eduorchestrate`) as equivalent to `/kordexa`.
 
 ## Core Workflow
 

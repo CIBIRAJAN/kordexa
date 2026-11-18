@@ -14,6 +14,10 @@ const LEGACY_MENTIONS = [
   ['"eduorchestrate", or "use EduOrchestrate"', "\u0002"]
 ];
 
+const MANAGED_START = "<!-- kordexa:start -->";
+const MANAGED_END = "<!-- kordexa:end -->";
+const OLD_GENERATED_HEADING = /^# (?:(?:EduOrchestrate|Kordexa) Agent Instructions|Gemini (?:EduOrchestrate|Kordexa) Context)\s/;
+
 function primary(text) {
   let output = text;
   for (const [mention, token] of LEGACY_MENTIONS) output = output.split(mention).join(token);
@@ -94,8 +98,8 @@ export function writeAgentAdapters(rootDir = process.cwd()) {
 
   // EduOrchestrate legacy compatibility adapters
   outputs.push(writeFile(rootDir, ".claude/skills/eduorchestrate/SKILL.md", claudeSkill()));
-  outputs.push(writeFile(rootDir, "AGENTS.md", primary(agentsMd())));
-  outputs.push(writeFile(rootDir, "GEMINI.md", primary(geminiMd())));
+  outputs.push(writeManagedFile(rootDir, "AGENTS.md", primary(agentsMd())));
+  outputs.push(writeManagedFile(rootDir, "GEMINI.md", primary(geminiMd())));
   outputs.push(writeFile(rootDir, ".eduorchestrate/adapters/codex/AGENTS.md", agentsMd()));
   outputs.push(writeFile(rootDir, ".eduorchestrate/adapters/openclaw/SKILL.md", genericSkill("openclaw")));
   outputs.push(writeFile(rootDir, ".eduorchestrate/adapters/antigravity/manifest.json", adapterManifest("antigravity")));
@@ -119,6 +123,26 @@ function writeFile(rootDir, relativePath, content) {
   return relativePath;
 }
 
+// AGENTS.md and GEMINI.md are shared with the learner's project, so Kordexa only
+// owns the section between these markers.
+function writeManagedFile(rootDir, relativePath, content) {
+  const filePath = path.join(rootDir, relativePath);
+  const block = `${MANAGED_START}\n${content.trimEnd()}\n${MANAGED_END}\n`;
+  if (!fs.existsSync(filePath)) return writeFile(rootDir, relativePath, block);
+  const existing = fs.readFileSync(filePath, "utf8");
+  const start = existing.indexOf(MANAGED_START);
+  const end = existing.indexOf(MANAGED_END);
+  if (start >= 0 && end > start) {
+    return writeFile(rootDir, relativePath, `${existing.slice(0, start)}${block.trimEnd()}${existing.slice(end + MANAGED_END.length)}`);
+  }
+  if (OLD_GENERATED_HEADING.test(existing)) {
+    const backupPath = `${filePath}.kordexa-backup`;
+    if (!fs.existsSync(backupPath)) fs.copyFileSync(filePath, backupPath);
+    return writeFile(rootDir, relativePath, block);
+  }
+  return writeFile(rootDir, relativePath, `${existing.trimEnd()}\n\n${block}`);
+}
+
 function cliExamples() {
   return `npx kordexa
 npx kordexa harness
@@ -138,7 +162,7 @@ function claudeSkill() {
 }
 
 function agentsMd() {
-  return `# EduOrchestrate Agent Instructions\n\n${UNIVERSAL_PROMPT}\n\n## Command\n\nExpose or honor \`/eduorchestrate\` for this repo. If the host agent cannot register slash commands, respond to \`/eduorchestrate\`, \`eduorchestrate\`, or \`use EduOrchestrate\` as the same workflow.\n\n## Workflow\n\n1. Load \`eduorchestrate.config.json\` when present.\n2. Ask for missing name, email, target role, current learning topic, first skill focus, current stage, desired plan days, daily email time, and timezone.\n3. Generate or update \`data/30-day-plan.json\`; never generate fewer than 30 days.\n4. Use \`npx kordexa research --day <n>\` for sourced docs, trend scans, YouTube search, and GitHub sample-code search links.\n5. Send or preview daily email with \`npx kordexa send-today --dry-run\` or \`npx kordexa send-today\`; browser/workspace agents must check and send the due daily mail on resume after SMTP setup, while GitHub Actions remains the scheduled no-browser path.\n6. Log evidence with \`npx kordexa log-progress --day <n> --completed "..." --evidence "..."\`.\n7. Do not create or type card UI in the agent. Use the prebuilt default card at \`skills/eduorchestrate/assets/default-terminal-card.svg\` or the initialized copy at \`data/default-terminal-card.svg\`.\n8. Load the compact execution harness with \`npx kordexa harness\` before doing research, mail, progress, or review work.\n9. Use \`npx kordexa courses\` for role-specific official/MNC course catalogs, free-course discovery links, and newsletters; do not default to Coursera or Udemy.\n10. When learner-specific state is needed, call the prebuilt CLI program with \`npx kordexa progress-card\` or \`npx kordexa terminal-card\`; then load \`data/progression-card.md\` or \`data/terminal-card.svg\`.\n11. Summarize with \`npx kordexa status\` and \`npx kordexa weekly-summary --week <n>\`.\n12. Recommend the next skill after the plan with \`npx kordexa recommend-next\`.\n13. Keep the learner focused on one daily build artifact.\n`;
+  return `# EduOrchestrate Agent Instructions\n\n${UNIVERSAL_PROMPT}\n\n## Command\n\nExpose or honor \`/eduorchestrate\` for this repo. If the host agent cannot register slash commands, respond to \`/eduorchestrate\`, \`eduorchestrate\`, or \`use EduOrchestrate\` as the same workflow.\n\n## Workflow\n\n1. Load \`kordexa.config.json\` when present.\n2. Ask for missing name, email, target role, current learning topic, first skill focus, current stage, desired plan days, daily email time, and timezone.\n3. Generate or update \`data/30-day-plan.json\`; never generate fewer than 30 days.\n4. Use \`npx kordexa research --day <n>\` for sourced docs, trend scans, YouTube search, and GitHub sample-code search links.\n5. Send or preview daily email with \`npx kordexa send-today --dry-run\` or \`npx kordexa send-today\`; browser/workspace agents must check and send the due daily mail on resume after SMTP setup, while GitHub Actions remains the scheduled no-browser path.\n6. Log evidence with \`npx kordexa log-progress --day <n> --completed "..." --evidence "..."\`.\n7. Do not create or type card UI in the agent. Use the prebuilt default card at \`skills/eduorchestrate/assets/default-terminal-card.svg\` or the initialized copy at \`data/default-terminal-card.svg\`.\n8. Load the compact execution harness with \`npx kordexa harness\` before doing research, mail, progress, or review work.\n9. Use \`npx kordexa courses\` for role-specific official/MNC course catalogs, free-course discovery links, and newsletters; do not default to Coursera or Udemy.\n10. When learner-specific state is needed, call the prebuilt CLI program with \`npx kordexa progress-card\` or \`npx kordexa terminal-card\`; then load \`data/progression-card.md\` or \`data/terminal-card.svg\`.\n11. Summarize with \`npx kordexa status\` and \`npx kordexa weekly-summary --week <n>\`.\n12. Recommend the next skill after the plan with \`npx kordexa recommend-next\`.\n13. Keep the learner focused on one daily build artifact.\n`;
 }
 
 function geminiMd() {

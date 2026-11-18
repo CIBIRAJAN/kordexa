@@ -25,7 +25,8 @@ export async function collectOnboarding({ defaults = {}, nonInteractive = false,
   const rl = readline.createInterface({ input, output });
   try {
     const ask = async (key, label) => {
-      const answer = await rl.question(`${label} [${values[key]}]: `);
+      const shown = key === "smtpPass" && values[key] ? "saved" : values[key];
+      const answer = await rl.question(`${label} [${shown}]: `);
       values[key] = answer.trim() || values[key];
     };
     await ask("name", "Your name");

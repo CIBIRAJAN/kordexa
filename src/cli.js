@@ -10,7 +10,7 @@ import { buildProgressionCard, copyDefaultTerminalCard, saveProgressionCard } fr
 import { appendProgress, createWeeklySummary, planStatus, reviewProgress } from "./progress.js";
 import { collectOnboarding } from "./prompts.js";
 import { appendResearchIndex, createResearchDigest, enrichDigestLinks, saveResearchDigest } from "./research.js";
-import { writeGithubWorkflow } from "./workflow.js";
+import { workflowStatus, writeGithubWorkflow } from "./workflow.js";
 
 export async function main(argv = []) {
   const command = normalizeCommand(argv[0]);
@@ -41,7 +41,8 @@ function normalizeCommand(value) {
 async function init(argv) {
   const nonInteractive = argv.includes("--yes") || argv.includes("--non-interactive");
   const overrides = parseKeyValues(argv);
-  const answers = await collectOnboarding({ nonInteractive, overrides });
+  const existing = existingSetup();
+  const answers = await collectOnboarding({ defaults: existing.defaults, nonInteractive, overrides });
   const config = {
     version: 1,
     command: "/kordexa",
@@ -55,7 +56,8 @@ async function init(argv) {
     },
     agents: ["claude", "codex", "gemini", "openclaw", "antigravity", "hermas", "generic"]
   };
-  config.schedule.startDate = localDateString(new Date(), config.schedule.timezone);
+  const keepStartDate = !argv.includes("--restart") && Number.isFinite(dateStringToUtc(existing.startDate).getTime());
+  config.schedule.startDate = keepStartDate ? existing.startDate : localDateString(new Date(), config.schedule.timezone);
   saveConfig(config);
   appendGitignore(["__pycache__/", "*.py[cod]", ".pytest_cache/", "node_modules/", ".env.local", "data/"]);
   writeLocalEnv({
@@ -77,6 +79,7 @@ async function init(argv) {
   const digestPath = saveResearchDigest(config, digest);
   appendResearchIndex(config, digestPath, digest);
   const workflowPath = writeGithubWorkflow(config);
+  const { warnings } = workflowStatus();
   outputJson({
     status: "initialized",
     command: "/kordexa",
@@ -88,8 +91,43 @@ async function init(argv) {
     learningSources: coursePaths.jsonPath,
     workflow: path.relative(process.cwd(), workflowPath),
     firstResearchDigest: digestPath,
-    next: "Run npx kordexa send-today --dry-run to preview the first email."
+    startDate: config.schedule.startDate,
+    next: "Run npx kordexa send-today --dry-run to preview the first email.",
+    ...(warnings.length ? { warnings } : {})
   });
+}
+
+// Re-running setup must not reset a learner's profile, email login or schedule.
+function existingSetup() {
+  let config = null;
+  try {
+    config = loadConfig();
+  } catch {
+    config = null;
+  }
+  const env = loadEnvFile(path.join(process.cwd(), ".env.local"));
+  const { learner = {}, schedule = {} } = config || {};
+  const saved = {
+    name: learner.name,
+    email: learner.email,
+    targetRole: learner.targetRole,
+    currentLearning: learner.currentLearning,
+    focusSkill: learner.focusSkill,
+    currentStage: learner.currentStage,
+    weeklyHours: learner.weeklyHours,
+    planDays: learner.planDays,
+    dailyEmailTime: schedule.dailyEmailTime,
+    timezone: schedule.timezone,
+    smtpHost: env.SMTP_HOST,
+    smtpPort: env.SMTP_PORT,
+    smtpUser: env.SMTP_USER,
+    smtpPass: env.SMTP_PASS,
+    smtpFrom: env.SMTP_FROM
+  };
+  return {
+    startDate: schedule.startDate,
+    defaults: Object.fromEntries(Object.entries(saved).filter(([, value]) => value !== undefined && value !== ""))
+  };
 }
 
 function regeneratePlan(argv) {
@@ -301,18 +339,36 @@ function doctor() {
   const parsedConfig = configExists ? readJson(configPath) : null;
   const configValidation = parsedConfig ? validateConfig(parsedConfig) : { valid: false, errors: ["Missing configuration"] };
 
+  const scheduled = workflowStatus();
+  const localSettings = { ...process.env, ...loadEnvFile(path.join(process.cwd(), ".env.local")) };
+  const missingEmailSettings = ["SMTP_HOST", "SMTP_USER", "SMTP_PASS"].filter((key) => !localSettings[key]);
+
   const checks = {
     agentsMd: fs.existsSync(path.join(process.cwd(), "AGENTS.md")),
     geminiMd: fs.existsSync(path.join(process.cwd(), "GEMINI.md")),
     claudeSkill: fs.existsSync(path.join(process.cwd(), ".claude", "skills", "kordexa", "SKILL.md")) || fs.existsSync(path.join(process.cwd(), ".claude", "skills", "eduorchestrate", "SKILL.md")),
     mcpManifest: fs.existsSync(path.join(process.cwd(), ".kordexa", "mcp", "manifest.json")) || fs.existsSync(path.join(process.cwd(), ".eduorchestrate", "mcp", "manifest.json")),
     config: (configExists && configValidation.valid) || (fs.existsSync(path.join(process.cwd(), "eduorchestrate.config.json")) && validateConfig(readJson(path.join(process.cwd(), "eduorchestrate.config.json"))).valid),
-    workflow: fs.existsSync(path.join(process.cwd(), ".github", "workflows", "kordexa-daily.yml")),
-    localEnv: fs.existsSync(path.join(process.cwd(), ".env.local"))
+    workflow: scheduled.current,
+    localEnv: fs.existsSync(path.join(process.cwd(), ".env.local")),
+    localEmail: missingEmailSettings.length === 0
   };
+  const { workflow, localEnv, localEmail, ...setupChecks } = checks;
+  const setupComplete = Object.values(setupChecks).every(Boolean);
+  const needsUpgrade = setupComplete && scheduled.outdated;
+  const nextSteps = [];
+  if (!setupComplete || (!workflow && !scheduled.outdated)) nextSteps.push("Run npx kordexa to finish setup.");
+  if (needsUpgrade) nextSteps.push("Run npx kordexa --yes to update the scheduled workflow. Your profile, email settings, progress and start date are kept.");
+  if (!localEmail) nextSteps.push(`Add ${missingEmailSettings.join(", ")} to .env.local to send email from this machine. For scheduled email, run npx kordexa setup-secrets.`);
+  let status = "ready";
+  if (!setupComplete || (!workflow && !scheduled.outdated)) status = "needs-setup";
+  else if (needsUpgrade) status = "needs-upgrade";
+  else if (!localEmail) status = "needs-email-setup";
   const result = {
-    status: Object.values(checks).every(Boolean) ? "ready" : "needs-setup",
+    status,
     checks,
+    ...(nextSteps.length ? { nextSteps } : {}),
+    ...(scheduled.warnings.length ? { warnings: scheduled.warnings } : {}),
     ...(configValidation.errors.length > 0 && configExists ? { configErrors: configValidation.errors } : {})
   };
   outputJson(result);
@@ -325,6 +381,7 @@ function printHelp() {
 Commands:
   npx kordexa                                Run one-command onboarding
   npx kordexa /kordexa                       Same as onboarding
+  npx kordexa --yes --restart                Run setup again and restart the plan today
   npx kordexa plan --role "Agentic AI and LLM Engineer"
   npx kordexa plan --days 45 --skill "RAG evaluation"
   npx kordexa status

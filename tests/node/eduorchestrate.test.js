@@ -88,7 +88,7 @@ test("one-command setup writes universal agent adapters and plan", async () => {
     assert.match(researchCmd, /argument-hint:/);
 
     const plan = JSON.parse(fs.readFileSync(path.join(dir, "data/30-day-plan.json"), "utf8"));
-    const config = JSON.parse(fs.readFileSync(path.join(dir, "eduorchestrate.config.json"), "utf8"));
+    const config = JSON.parse(fs.readFileSync(path.join(dir, "kordexa.config.json"), "utf8"));
     const harness = JSON.parse(fs.readFileSync(path.join(dir, "data/eduorchestrate-harness.json"), "utf8"));
     assert.equal(plan.days.length, 45);
     assert.match(config.schedule.startDate, /^\d{4}-\d{2}-\d{2}$/);
@@ -238,7 +238,7 @@ test("scheduled send handles missing or invalid start dates safely", () => {
 test("scheduled send skips after the plan window instead of sending forever", async () => {
   await inTempDir(async (dir) => {
     await main(["--yes", "--name", "Learner", "--email", "learner@example.com", "--role", "Data Scientist", "--days", "30"]);
-    const configPath = path.join(dir, "eduorchestrate.config.json");
+    const configPath = path.join(dir, "kordexa.config.json");
     const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
     config.schedule.startDate = "2020-01-01";
     fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
@@ -255,7 +255,7 @@ test("scheduled send skips after the plan window instead of sending forever", as
 test("explicit send-today day overrides plan-complete scheduled skip", async () => {
   await inTempDir(async (dir) => {
     await main(["--yes", "--name", "Learner", "--email", "learner@example.com", "--role", "Data Scientist", "--days", "30"]);
-    const configPath = path.join(dir, "eduorchestrate.config.json");
+    const configPath = path.join(dir, "kordexa.config.json");
     const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
     config.schedule.startDate = "2020-01-01";
     fs.writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");
@@ -371,7 +371,9 @@ test("offline link resolution falls back to verifiable search URLs", async () =>
 test("link resolution returns concrete video and repo links (stubbed fetch)", async () => {
   const originalFetch = global.fetch;
   const originalOffline = process.env.EDUORCHESTRATE_OFFLINE;
+  const originalKordexaOffline = process.env.KORDEXA_OFFLINE;
   delete process.env.EDUORCHESTRATE_OFFLINE;
+  delete process.env.KORDEXA_OFFLINE;
   global.fetch = async (url) => {
     const target = String(url);
     if (target.includes("youtube.com")) {
@@ -409,6 +411,7 @@ test("link resolution returns concrete video and repo links (stubbed fetch)", as
   } finally {
     global.fetch = originalFetch;
     if (originalOffline !== undefined) process.env.EDUORCHESTRATE_OFFLINE = originalOffline;
+    if (originalKordexaOffline !== undefined) process.env.KORDEXA_OFFLINE = originalKordexaOffline;
   }
 });
 
@@ -518,6 +521,7 @@ test("doctor reports detailed checks and config status", async () => {
     fs.writeFileSync(path.join(dir, "package.json"), "{}", "utf8");
     fs.mkdirSync(path.join(dir, "skills", "eduorchestrate"), { recursive: true });
     fs.writeFileSync(path.join(dir, "skills", "eduorchestrate", "SKILL.md"), "# Skill", "utf8");
+    fs.appendFileSync(path.join(dir, ".env.local"), "SMTP_USER=doc@example.com\nSMTP_PASS=test-value\n", "utf8");
     const fullReady = await main(["doctor"]);
     assert.equal(fullReady.status, "ready");
   });

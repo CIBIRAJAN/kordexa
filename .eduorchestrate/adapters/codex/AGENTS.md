@@ -8,7 +8,7 @@ Expose or honor `/eduorchestrate` for this repo. If the host agent cannot regist
 
 ## Workflow
 
-1. Load `eduorchestrate.config.json` when present.
+1. Load `kordexa.config.json` when present.
 2. Ask for missing name, email, target role, current learning topic, first skill focus, current stage, desired plan days, daily email time, and timezone.
 3. Generate or update `data/30-day-plan.json`; never generate fewer than 30 days.
 4. Use `npx kordexa research --day <n>` for sourced docs, trend scans, YouTube search, and GitHub sample-code search links.

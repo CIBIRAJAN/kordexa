@@ -24,7 +24,7 @@ export function reviewProgress(config, plan) {
   const completedDays = new Set(entries.map((entry) => entry.day));
   const latest = entries.at(-1) || null;
   const totalDays = plan.days.length || 30;
-  const nextDay = Math.min(totalDays, Math.max(1, (latest?.day || 0) + 1));
+  const nextDay = Math.min(totalDays, firstUnfinishedDay(completedDays));
   const activeDay = plan.days.find((day) => day.day === nextDay) || plan.days.at(-1);
   const blockers = entries.filter((entry) => entry.blocker).map((entry) => entry.blocker);
   return {
@@ -73,7 +73,13 @@ export function planStatus(config, plan) {
 }
 
 function inferNextDay(entries) {
-  return Math.max(1, (entries.at(-1)?.day || 0) + 1);
+  return firstUnfinishedDay(new Set(entries.map((entry) => entry.day)));
+}
+
+function firstUnfinishedDay(completedDays) {
+  let day = 1;
+  while (completedDays.has(day)) day += 1;
+  return day;
 }
 
 function momentum(entries) {

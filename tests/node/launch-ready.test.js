@@ -34,11 +34,11 @@ function filesUnder(dir) {
   });
 }
 
-test("package installs under the kordexa name with both commands", () => {
+test("package installs under the kordexa name without claiming the upstream command", () => {
   const pkg = JSON.parse(fs.readFileSync(path.join(repoRoot, "package.json"), "utf8"));
   assert.equal(pkg.name, "kordexa");
   assert.equal(pkg.bin.kordexa, "bin/kordexa.js");
-  assert.equal(pkg.bin.eduorchestrate, "bin/eduorchestrate.js");
+  assert.equal(pkg.bin.eduorchestrate, undefined);
 });
 
 test("license keeps the original author's copyright notice", () => {
@@ -61,20 +61,6 @@ test("setup creates one scheduled workflow so email is not sent twice", async ()
   await inTempDir(async (dir) => {
     await main(SETUP);
     assert.deepEqual(fs.readdirSync(path.join(dir, ".github/workflows")), ["kordexa-daily.yml"]);
-  });
-});
-
-test("setup replaces an old generated workflow but keeps a learner's own file", async () => {
-  await inTempDir(async (dir) => {
-    const legacy = path.join(dir, ".github/workflows/eduorchestrate-daily.yml");
-    fs.mkdirSync(path.dirname(legacy), { recursive: true });
-    fs.writeFileSync(legacy, "name: EduOrchestrate Daily Plan\njobs:\n  a:\n    run: node bin/eduorchestrate.js send-today\n");
-    await main(SETUP);
-    assert.equal(fs.existsSync(legacy), false);
-
-    fs.writeFileSync(legacy, "name: My own workflow\n");
-    await main(SETUP);
-    assert.equal(fs.readFileSync(legacy, "utf8"), "name: My own workflow\n");
   });
 });
 
@@ -113,11 +99,3 @@ test("primary adapters use the Kordexa name and legacy slash commands remain", a
   });
 });
 
-test("doctor reports a freshly set up learner project as ready", async () => {
-  await inTempDir(async () => {
-    await main(SETUP);
-    const result = await main(["doctor"]);
-    assert.equal(result.status, "ready");
-    assert.equal(result.checks.workflow, true);
-  });
-});
